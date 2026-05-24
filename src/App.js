@@ -187,7 +187,116 @@ const smmPackages = [
   }
 ];
 
-export default function App() {
+function HeroSection() {
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;  // -1 to 1
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    setMouse({ x, y });
+  };
+
+  return (
+    <section
+      id="hero"
+      className="relative overflow-hidden min-h-[92vh] flex items-center"
+      onMouseMove={handleMouseMove}
+    >
+      <style>{`
+        @keyframes coverReveal {
+          from { opacity: 0; transform: scale(1.08); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes headlineGlow {
+          0%,100% { filter: drop-shadow(0 0 20px rgba(229,9,20,0.6)) drop-shadow(0 0 50px rgba(229,9,20,0.2)); }
+          50%      { filter: drop-shadow(0 0 38px rgba(255,100,0,0.85)) drop-shadow(0 0 80px rgba(229,9,20,0.5)); }
+        }
+        @keyframes headlineIn {
+          from { opacity: 0; transform: translateY(32px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        html { scroll-behavior: smooth; }
+      `}</style>
+
+      {/* Cover image wrapper — parallax on mouse move */}
+      <div
+        className="absolute inset-0 transition-transform duration-[120ms] ease-out"
+        style={{ transform: `translate(${mouse.x * -10}px, ${mouse.y * -6}px) scale(1.04)` }}
+      >
+        {/* Desktop */}
+        <img
+          src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
+          alt="Eshelon Cover"
+          className="hidden lg:block w-full h-full object-cover object-right"
+          style={{ animation: 'coverReveal 1.8s cubic-bezier(0.22,1,0.36,1) both' }}
+        />
+        {/* Mobile */}
+        <img
+          src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
+          alt="Eshelon Cover"
+          className="block lg:hidden w-full h-full object-cover object-right"
+          style={{ animation: 'coverReveal 1.8s cubic-bezier(0.22,1,0.36,1) both' }}
+        />
+      </div>
+
+      {/* Left gradient — text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/80 to-[#0d0d0d]/10" />
+      {/* Bottom gradient — smooth blend into next section, taller & stronger */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/80 to-transparent" />
+      {/* Right edge softening */}
+      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0d0d0d]/40 to-transparent" />
+
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="max-w-xl lg:max-w-2xl space-y-8">
+
+          <div className="inline-flex items-center space-x-2 bg-red-950/60 border border-[#E50914]/40 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914]">
+            <Sparkles className="w-4 h-4 text-red-500 animate-spin-slow" />
+            <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
+          </div>
+
+          {/* Headline PNG — entrance + glow pulse */}
+          <img
+            src="https://i.postimg.cc/gj0h2dyY/teqsst1.png"
+            alt="Headline"
+            className="w-full max-w-lg"
+            style={{ animation: 'headlineIn 1s 0.4s cubic-bezier(0.22,1,0.36,1) both, headlineGlow 3.5s 1.4s ease-in-out infinite' }}
+          />
+
+          <div className="flex flex-col sm:flex-row items-start gap-4">
+            <a href="#portfolio" className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-gray-100 transition duration-200 shadow-lg active:scale-95">
+              ᲜᲐᲮᲔ ᲞᲝᲠᲢᲤᲝᲚᲘᲝ
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </a>
+            <a href="#pricing" className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-transparent text-white border border-white/30 hover:border-white hover:bg-white/10 transition duration-200 active:scale-95">
+              ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲢᲔᲑᲘ
+            </a>
+          </div>
+
+          {/* Key metrics */}
+          <div className="pt-8 grid grid-cols-3 gap-6 max-w-md border-t border-white/10">
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white">98%</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">კმაყოფილი კლიენტი</div>
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">შექმნილი იდენტობა</div>
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white">2.5X</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">ROI გაყიდვებში</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
   const [activeTab, setActiveTab] = useState('branding'); // branding vs smm
   const [selectedProject, setSelectedProject] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -334,8 +443,12 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-3">
-              {/* Logo — click scrolls to hero */}
-              <a href="#hero" className="flex items-center space-x-3 group">
+              {/* Logo — smooth scroll to hero */}
+              <a
+                href="#hero"
+                onClick={e => { e.preventDefault(); document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="flex items-center space-x-3 group"
+              >
                 <div className="relative cursor-pointer">
                   <div className="absolute -inset-1 bg-gradient-to-r from-[#E50914] to-orange-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300" />
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-[#E50914]/50">
@@ -381,139 +494,22 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden bg-[#0d0d0d] border-b border-[#262626] px-4 py-6 space-y-4">
-            <a
-              href="#services"
-              onClick={() => setMenuOpen(false)}
-              className="block text-base font-medium text-gray-300 hover:text-[#E50914]"
-            >
-              სერვისები
-            </a>
-            <a
-              href="#portfolio"
-              onClick={() => setMenuOpen(false)}
-              className="block text-base font-medium text-gray-300 hover:text-[#E50914]"
-            >
-              პორტფოლიო
-            </a>
-            <a
-              href="#pricing"
-              onClick={() => setMenuOpen(false)}
-              className="block text-base font-medium text-gray-300 hover:text-[#E50914]"
-            >
-              ფასები
-            </a>
-            <a
-              href="#ai-strategist"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center space-x-2 text-base font-medium text-red-400"
-            >
+            <a href="#services" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">სერვისები</a>
+            <a href="#portfolio" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">პორტფოლიო</a>
+            <a href="#pricing" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">ფასები</a>
+            <a href="#ai-strategist" onClick={() => setMenuOpen(false)} className="flex items-center space-x-2 text-base font-medium text-red-400">
               <BrainCircuit className="w-5 h-5 animate-pulse" />
               <span>Echelon AI ბრენდ-სტრატეგი</span>
             </a>
-            <a
-              href="#contact"
-              onClick={() => setMenuOpen(false)}
-              className="block w-full text-center py-3 rounded-lg text-base font-bold bg-[#E50914] text-white"
-            >
+            <a href="#contact" onClick={() => setMenuOpen(false)} className="block w-full text-center py-3 rounded-lg text-base font-bold bg-[#E50914] text-white">
               დაგვიკავშირდით
             </a>
           </div>
         )}
       </nav>
 
-      {/* HERO SECTION — full-width cover background */}
-      <section id="hero" className="relative overflow-hidden min-h-[92vh] flex items-center">
-
-        {/* Background cover — desktop, fade+scale in */}
-        <img
-          src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
-          alt="Eshelon Cover"
-          className="hidden lg:block absolute inset-0 w-full h-full object-cover object-right"
-          style={{ animation: 'coverReveal 1.2s cubic-bezier(0.22,1,0.36,1) both' }}
-        />
-        {/* Background cover — mobile */}
-        <img
-          src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
-          alt="Eshelon Cover"
-          className="block lg:hidden absolute inset-0 w-full h-full object-cover object-right"
-          style={{ animation: 'coverReveal 1.2s cubic-bezier(0.22,1,0.36,1) both' }}
-        />
-
-        {/* Keyframes injected inline */}
-        <style>{`
-          @keyframes coverReveal {
-            from { opacity: 0; transform: scale(1.06); }
-            to   { opacity: 1; transform: scale(1); }
-          }
-          @keyframes headlineGlow {
-            0%,100% { filter: drop-shadow(0 0 18px rgba(229,9,20,0.55)) drop-shadow(0 0 40px rgba(229,9,20,0.25)); }
-            50%      { filter: drop-shadow(0 0 32px rgba(255,120,0,0.75)) drop-shadow(0 0 70px rgba(229,9,20,0.45)); }
-          }
-          @keyframes headlineIn {
-            from { opacity: 0; transform: translateY(28px); }
-            to   { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
-
-        {/* Left gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/75 to-transparent" />
-        {/* Bottom fade into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-
-        {/* Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="max-w-xl lg:max-w-2xl space-y-8">
-
-            <div className="inline-flex items-center space-x-2 bg-red-950/60 border border-[#E50914]/40 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914]">
-              <Sparkles className="w-4 h-4 text-red-500 animate-spin-slow" />
-              <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
-            </div>
-
-            {/* Headline PNG with glow + entrance animation */}
-            <img
-              src="https://i.postimg.cc/gj0h2dyY/teqsst1.png"
-              alt="Headline"
-              className="w-full max-w-lg"
-              style={{
-                animation: 'headlineIn 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both, headlineGlow 3s 1.2s ease-in-out infinite'
-              }}
-            />
-
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <a
-                href="#portfolio"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-gray-100 transition duration-200 shadow-lg active:scale-95"
-              >
-                ᲜᲐᲮᲔ ᲞᲝᲠᲢᲤᲝᲚᲘᲝ
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </a>
-              <a
-                href="#pricing"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-transparent text-white border border-white/30 hover:border-white hover:bg-white/10 transition duration-200 active:scale-95"
-              >
-                ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲢᲔᲑᲘ
-              </a>
-            </div>
-
-            {/* Key metrics */}
-            <div className="pt-8 grid grid-cols-3 gap-6 max-w-md border-t border-white/10">
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-white">98%</div>
-                <div className="text-xs text-gray-400 uppercase tracking-wider">კმაყოფილი კლიენტი</div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
-                <div className="text-xs text-gray-400 uppercase tracking-wider">შექმნილი იდენტობა</div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-black text-white">2.5X</div>
-                <div className="text-xs text-gray-400 uppercase tracking-wider">ROI გაყიდვებში</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
+      {/* HERO SECTION */}
+      <HeroSection />
 
       {/* CORE SERVICES */}
       <section id="services" className="py-24 bg-[#0a0a0a] border-y border-[#1e1e1e] relative">
@@ -679,21 +675,25 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
       {/* PORTFOLIO MODAL */}
       {selectedProject && (
         <div
-          className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 overflow-y-auto"
           onClick={() => setSelectedProject(null)}
+          style={{ animation: 'fadeIn 0.2s ease both' }}
         >
-          <div
-            className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-
-            {/* Close button — sticky */}
-            <button
-              onClick={() => setSelectedProject(null)}
-              className="sticky top-4 float-right mr-4 z-10 text-gray-400 hover:text-white bg-black/70 p-2 rounded-full border border-white/10 transition"
+          <style>{`@keyframes fadeIn { from { opacity:0 } to { opacity:1 } } @keyframes slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }`}</style>
+          <div className="min-h-full flex items-start justify-center p-4 py-12">
+            <div
+              className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full shadow-2xl relative"
+              onClick={(e) => e.stopPropagation()}
+              style={{ animation: 'slideUp 0.3s cubic-bezier(0.22,1,0.36,1) both' }}
             >
-              <X className="w-5 h-5" />
-            </button>
+
+              {/* Close button — absolute top-right */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white bg-black/70 p-2 rounded-full border border-white/10 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
             {/* Cover image — full width, no crop */}
             {selectedProject.coverImage && (
@@ -760,6 +760,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               </button>
             </div>
 
+            </div>
           </div>
         </div>
       )}
