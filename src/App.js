@@ -449,17 +449,11 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white drop-shadow-lg">
-              ᲩᲕᲔᲜ ᲕᲥᲛᲜᲘᲗ{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E50914] to-orange-500">
-                ᲘᲛᲞᲔᲠᲘᲔᲑᲡ
-              </span>
-              , ᲐᲠᲐ ᲛᲮᲝᲚᲝᲓ ᲑᲠᲔᲜᲓᲔᲑᲡ.
-            </h1>
-
-            <p className="text-gray-300 text-lg max-w-lg">
-              ციფრული სააგენტო <strong className="text-white">ეშელონი</strong> აერთიანებს უმაღლესი დონის მარკეტინგულ სტრატეგიას და თამამ, აგრესიულ ვიზუალურ ხელოვნებას. ჩვენი მისიაა თქვენი იდეების ბრენდირებულ ერთეულად ქცევა.
-            </p>
+            <img
+              src="https://i.postimg.cc/gj0h2dyY/teqsst1.png"
+              alt="Headline"
+              className="w-full max-w-lg drop-shadow-2xl"
+            />
 
             <div className="flex flex-col sm:flex-row items-start gap-4">
               <a
