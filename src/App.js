@@ -1,6 +1,5 @@
 import './style.css';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass,
   Sparkles,
@@ -94,7 +93,7 @@ const portfolioData = [
   }
 ];
 
-// Pricing Data matching the exact PDF content, fully corrected
+// Pricing Data
 const brandingPackages = [
   {
     title: "ლოგო დიზაინი",
@@ -200,59 +199,64 @@ function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden min-h-[92vh] flex items-center"
+      className="relative overflow-hidden min-h-[92vh] flex items-center bg-[#0d0d0d]"
       onMouseMove={handleMouseMove}
     >
       <style>{`
         @keyframes coverReveal {
-          from { opacity: 0; transform: scale(1.08); }
+          from { opacity: 0; transform: scale(1.05); }
           to   { opacity: 1; transform: scale(1); }
         }
         @keyframes headlineGlow {
-          0%,100% { filter: drop-shadow(0 0 20px rgba(229,9,20,0.6)) drop-shadow(0 0 50px rgba(229,9,20,0.2)); }
-          50%      { filter: drop-shadow(0 0 38px rgba(255,100,0,0.85)) drop-shadow(0 0 80px rgba(229,9,20,0.5)); }
+          0%,100% { filter: drop-shadow(0 0 20px rgba(229,9,20,0.5)) drop-shadow(0 0 40px rgba(229,9,20,0.1)); }
+          50%      { filter: drop-shadow(0 0 35px rgba(255,80,0,0.7)) drop-shadow(0 0 70px rgba(229,9,20,0.4)); }
         }
         @keyframes headlineIn {
-          from { opacity: 0; transform: translateY(32px); }
+          from { opacity: 0; transform: translateY(24px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInEffect {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in {
+          animation: fadeInEffect 0.5s ease-out forwards;
         }
         html { scroll-behavior: smooth; }
       `}</style>
 
-      {/* Cover image wrapper — parallax on mouse move */}
+      {/* Cover image wrapper — ultra-smooth parallax */}
       <div
-        className="absolute inset-0 transition-transform duration-[120ms] ease-out"
-        style={{ transform: `translate(${mouse.x * -10}px, ${mouse.y * -6}px) scale(1.04)` }}
+        className="absolute inset-0 transition-transform duration-[300ms] ease-out pointer-events-none"
+        style={{ transform: `translate(${mouse.x * -12}px, ${mouse.y * -8}px) scale(1.03)` }}
       >
         {/* Desktop */}
         <img
           src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
-          alt="Eshelon Cover"
+          alt="Echelon Cover"
           className="hidden lg:block w-full h-full object-cover object-right"
-          style={{ animation: 'coverReveal 1.8s cubic-bezier(0.22,1,0.36,1) both' }}
+          style={{ animation: 'coverReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) both' }}
         />
         {/* Mobile */}
         <img
           src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
-          alt="Eshelon Cover"
+          alt="Echelon Cover"
           className="block lg:hidden w-full h-full object-cover object-right"
-          style={{ animation: 'coverReveal 1.8s cubic-bezier(0.22,1,0.36,1) both' }}
+          style={{ animation: 'coverReveal 2.2s cubic-bezier(0.25, 1, 0.5, 1) both' }}
         />
       </div>
 
-      {/* Left gradient — text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/80 to-[#0d0d0d]/10" />
-      {/* Bottom gradient — smooth blend into next section, taller & stronger */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/80 to-transparent" />
-      {/* Right edge softening */}
-      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0d0d0d]/40 to-transparent" />
+      {/* GRADIENT OVERLAYS — Soft blending directly into background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/70 to-transparent lg:via-[#0d0d0d]/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/40 to-transparent h-full bottom-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="max-w-xl lg:max-w-2xl space-y-8">
 
-          <div className="inline-flex items-center space-x-2 bg-red-950/60 border border-[#E50914]/40 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914]">
-            <Sparkles className="w-4 h-4 text-red-500 animate-spin-slow" />
+          <div className="inline-flex items-center space-x-2 bg-red-950/60 backdrop-blur-sm border border-[#E50914]/40 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914] shadow-[0_0_15px_rgba(229,9,20,0.15)]">
+            <Sparkles className="w-4 h-4 text-red-500 animate-pulse" />
             <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
           </div>
 
@@ -260,33 +264,33 @@ function HeroSection() {
           <img
             src="https://i.postimg.cc/gj0h2dyY/teqsst1.png"
             alt="Headline"
-            className="w-full max-w-lg"
-            style={{ animation: 'headlineIn 1s 0.4s cubic-bezier(0.22,1,0.36,1) both, headlineGlow 3.5s 1.4s ease-in-out infinite' }}
+            className="w-full max-w-lg select-none pointer-events-none"
+            style={{ animation: 'headlineIn 1.2s 0.2s cubic-bezier(0.25, 1, 0.5, 1) both, headlineGlow 4s 1.5s ease-in-out infinite' }}
           />
 
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            <a href="#portfolio" className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-gray-100 transition duration-200 shadow-lg active:scale-95">
+          <div className="flex flex-col sm:flex-row items-start gap-4 pt-2">
+            <a href="#portfolio" className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-gray-100 transition-all duration-200 shadow-xl hover:shadow-white/5 active:scale-95">
               ᲜᲐᲮᲔ ᲞᲝᲠᲢᲤᲝᲚᲘᲝ
               <ArrowRight className="w-5 h-5 ml-2" />
             </a>
-            <a href="#pricing" className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-transparent text-white border border-white/30 hover:border-white hover:bg-white/10 transition duration-200 active:scale-95">
-              ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲢᲔᲑᲘ
+            <a href="#pricing" className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-transparent text-white border border-white/20 hover:border-white hover:bg-white/5 transition-all duration-200 active:scale-95">
+              ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲑᲔᲑᲘ
             </a>
           </div>
 
           {/* Key metrics */}
           <div className="pt-8 grid grid-cols-3 gap-6 max-w-md border-t border-white/10">
             <div>
-              <div className="text-2xl sm:text-3xl font-black text-white">98%</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">კმაყოფილი კლიენტი</div>
+              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">98%</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">კმაყოფილი კლიენტი</div>
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">შექმნილი იდენტობა</div>
+              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">50+</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">შექმნილი იდენტობა</div>
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-black text-white">2.5X</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">ROI გაყიდვებში</div>
+              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">2.5X</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">ROI გაყიდვებში</div>
             </div>
           </div>
 
@@ -296,10 +300,20 @@ function HeroSection() {
   );
 }
 
-
-  const [activeTab, setActiveTab] = useState('branding'); // branding vs smm
+export default function App() {
+  const [activeTab, setActiveTab] = useState('branding');
   const [selectedProject, setSelectedProject] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Freezes background scroll when modal is active
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedProject]);
 
   // Custom calculator state
   const [customServices, setCustomServices] = useState({
@@ -318,11 +332,10 @@ function HeroSection() {
   const [aiError, setAiError] = useState("");
 
   // Order modal state
-  const [orderModal, setOrderModal] = useState(null); // package object or null
+  const [orderModal, setOrderModal] = useState(null);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderForm, setOrderForm] = useState({ name: '', phone: '', note: '' });
 
-  // Calculate price dynamically for custom estimator
   const calculateCustomPrice = () => {
     let base = 0;
     if (customServices.logo) base += 500;
@@ -334,13 +347,10 @@ function HeroSection() {
     return base;
   };
 
-  // Exponential backoff API call helper
   const fetchWithBackoff = async (url, options, retries = 5, delay = 1000) => {
     try {
       const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return await response.json();
     } catch (error) {
       if (retries > 0) {
@@ -352,7 +362,6 @@ function HeroSection() {
     }
   };
 
-  // Call Gemini to generate brand strategic response
   const generateAIStrategy = async (e) => {
     e.preventDefault();
     if (!businessIdea.trim()) return;
@@ -361,27 +370,22 @@ function HeroSection() {
     setAiError("");
     setAiStrategyResult(null);
 
-    const apiKey = ""; // Runtime key injection expected
+    const apiKey = ""; 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
     const systemPrompt = `You are the brilliant and bold Creative Director of "Echelon" (ეშელონი) Digital Agency.
-Your agency combines deep strategic chess-like planning and explosive anime-styled artistic creativity (represented by chess knight and pencil symbols).
+Your agency combines deep strategic chess-like planning and explosive anime-styled artistic creativity.
 The user is giving you their business/startup idea.
 Generate a sharp, encouraging, and highly professional branding strategy response in GEORGIAN language.
 Your response MUST be in structured JSON format with the following keys:
 1. "slogan": An epic, memorable, punchy branding slogan in Georgian.
 2. "vibeDescription": A short description of the visual vibe/style they should adopt (color palette, styling notes).
 3. "strategySteps": Array of 3 key strategic actions they must take immediately to win the market.
-4. "heroIdea": A unique, mind-blowing social media or advertising campaign concept.
-Keep the style bold, youthful, and highly confident (as a top-tier digital agency). Do not mention any JSON syntax in the text, just return the valid JSON.`;
+4. "heroIdea": A unique, mind-blowing social media or advertising campaign concept.`;
 
     const payload = {
-      contents: [{
-        parts: [{ text: `ჩემი ბიზნესის იდეაა: ${businessIdea}. მომიფიქრე ეშელონის სტილის სტრატეგია!` }]
-      }],
-      systemInstruction: {
-        parts: [{ text: systemPrompt }]
-      },
+      contents: [{ parts: [{ text: `ჩემი ბიზნესის იდეაა: ${businessIdea}. მომიფიქრე ეშელონის სტილის სტრატეგია!` }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -389,10 +393,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
           properties: {
             slogan: { type: "STRING" },
             vibeDescription: { type: "STRING" },
-            strategySteps: {
-              type: "ARRAY",
-              items: { type: "STRING" }
-            },
+            strategySteps: { type: "ARRAY", items: { type: "STRING" } },
             heroIdea: { type: "STRING" }
           },
           required: ["slogan", "vibeDescription", "strategySteps", "heroIdea"]
@@ -409,8 +410,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
       const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (textResponse) {
-        const parsedData = JSON.parse(textResponse);
-        setAiStrategyResult(parsedData);
+        setAiStrategyResult(JSON.parse(textResponse));
       } else {
         throw new Error("პასუხი ვერ მივიღეთ.");
       }
@@ -433,26 +433,29 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-[#f2f2f2] font-sans antialiased selection:bg-[#E50914] selection:text-white">
-
+    <div className="min-h-screen bg-[#0d0d0d] text-[#f2f2f2] font-sans antialiased selection:bg-[#E50914] selection:text-white overflow-x-hidden">
+      
       {/* GLOWING HEADER BACKGROUND ACCENT */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-[#E50914]/10 via-transparent to-transparent blur-3xl pointer-events-none -z-10" />
 
       {/* NAVBAR */}
-      <nav className="sticky top-0 z-40 bg-[#0d0d0d]/90 backdrop-blur-md border-b border-[#262626]">
+      <nav className="sticky top-0 z-40 bg-[#0d0d0d]/85 backdrop-blur-md border-b border-[#262626]/80 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-3">
-              {/* Logo — smooth scroll to hero */}
+              {/* Logo — Ultra-smooth scroll to hero */}
               <a
                 href="#hero"
-                onClick={e => { e.preventDefault(); document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }); }}
+                onClick={e => {
+                  e.preventDefault();
+                  document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
                 className="flex items-center space-x-3 group"
               >
-                <div className="relative cursor-pointer">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-[#E50914] to-orange-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300" />
-                  <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-[#E50914]/50">
-                    <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Eshelon Logo" className="w-full h-full object-cover" />
+                <div className="relative">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-[#E50914] to-orange-600 rounded-lg blur opacity-50 group-hover:opacity-90 transition duration-300" />
+                  <div className="relative w-11 h-11 rounded-lg overflow-hidden border border-[#E50914]/40">
+                    <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Echelon Logo" className="w-full h-full object-cover" />
                   </div>
                 </div>
                 <div>
@@ -464,17 +467,14 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#services" className="text-sm font-medium text-gray-300 hover:text-[#E50914] transition-colors">სერვისები</a>
-              <a href="#portfolio" className="text-sm font-medium text-gray-300 hover:text-[#E50914] transition-colors">პორტფოლიო</a>
-              <a href="#pricing" className="text-sm font-medium text-gray-300 hover:text-[#E50914] transition-colors">ფასები</a>
-              <a href="#ai-strategist" className="text-sm font-medium flex items-center space-x-1 text-red-400 hover:text-red-300 transition-colors bg-red-950/40 px-3 py-1 rounded-full border border-red-500/20">
+              <a href="#services" className="text-sm font-medium text-gray-300 hover:text-[#E50914] transition-colors duration-200">სერვისები</a>
+              <a href="#portfolio" className="text-sm font-medium text-gray-300 hover:text-[#E50914] transition-colors duration-200">პორტფოლიო</a>
+              <a href="#pricing" className="text-sm font-medium text-gray-300 hover:text-[#E50914] transition-colors duration-200">ფასები</a>
+              <a href="#ai-strategist" className="text-sm font-medium flex items-center space-x-1 text-red-400 hover:text-red-300 transition-colors duration-200 bg-red-950/40 px-3.5 py-1.5 rounded-full border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.05)]">
                 <BrainCircuit className="w-4 h-4 animate-pulse" />
                 <span>Echelon AI</span>
               </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-bold bg-[#E50914] text-white hover:bg-red-700 active:scale-95 transition"
-              >
+              <a href="#contact" className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-bold bg-[#E50914] text-white hover:bg-red-700 active:scale-95 transition-all duration-200 shadow-md shadow-red-900/20">
                 კონტაქტი
               </a>
             </div>
@@ -483,7 +483,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
             <div className="md:hidden">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-400 hover:text-white focus:outline-none"
+                className="text-gray-400 hover:text-white p-2 transition-colors"
               >
                 {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -493,10 +493,10 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden bg-[#0d0d0d] border-b border-[#262626] px-4 py-6 space-y-4">
-            <a href="#services" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">სერვისები</a>
-            <a href="#portfolio" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">პორტფოლიო</a>
-            <a href="#pricing" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">ფასები</a>
+          <div className="md:hidden bg-[#0d0d0d]/95 backdrop-blur-lg border-b border-[#262626] px-4 py-6 space-y-4 animate-fade-in">
+            <a href="#services" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914] transition-colors">სერვისები</a>
+            <a href="#portfolio" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914] transition-colors">პორტფოლიო</a>
+            <a href="#pricing" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914] transition-colors">ფასები</a>
             <a href="#ai-strategist" onClick={() => setMenuOpen(false)} className="flex items-center space-x-2 text-base font-medium text-red-400">
               <BrainCircuit className="w-5 h-5 animate-pulse" />
               <span>Echelon AI ბრენდ-სტრატეგი</span>
@@ -514,21 +514,19 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
       {/* CORE SERVICES */}
       <section id="services" className="py-24 bg-[#0a0a0a] border-y border-[#1e1e1e] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
             <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">ᲠᲐᲡ ᲕᲐᲙᲔᲗᲔᲑᲗ</h2>
-            <p className="text-3xl sm:text-4xl font-black tracking-tight text-white">ᲡᲠᲣᲚᲘ ᲪᲘᲤᲠᲣᲚᲘ ᲐᲠᲡᲔᲜᲐᲚᲘ ᲗᲥᲕᲔᲜᲘ ᲑᲘᲖᲜᲔᲡᲘᲡ ᲬᲐᲠᲛᲐᲢᲔᲑᲘᲡᲗᲕᲘᲡ</p>
-            <p className="text-gray-400">ჩვენი მომსახურებები მოიცავს ყველაფერს, რაც გჭირდებათ იდეიდან – მილიონიან ბრენდამდე მისასვლელად.</p>
+            <p className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">ᲡᲠᲣᲚᲘ ᲪᲘᲤᲠᲣᲚᲘ ᲐᲠᲡᲔᲜᲐᲚᲘ ᲗᲥᲕᲔᲜᲘ ᲑᲘᲖᲜᲔᲡᲘᲡ ᲬᲐᲠᲛᲐᲢᲔᲑᲘᲡᲗᲕᲘᲡ</p>
+            <p className="text-gray-400 text-sm sm:text-base">ჩვენი მომსახურებები მოიცავს ყველაფერს, რაც გჭირდებათ იდეიდან – მილიონიან ბრენდამდე მისასვლელად.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
             {/* Service 1 */}
-            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/40 transition duration-300 group">
-              <div className="w-12 h-12 rounded-xl bg-red-950/40 border border-red-500/30 flex items-center justify-center text-[#E50914] mb-6 group-hover:scale-110 transition duration-300">
+            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/30 hover:shadow-[0_0_30px_rgba(229,9,20,0.06)] transition-all duration-300 group">
+              <div className="w-12 h-12 rounded-xl bg-red-950/40 border border-red-500/20 flex items-center justify-center text-[#E50914] mb-6 group-hover:scale-110 group-hover:border-[#E50914]/50 transition-all duration-300">
                 <Compass className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">ვიზუალური იდენტობა</h3>
+              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#E50914] transition-colors duration-200">ვიზუალური იდენტობა</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 ლოგოების, ფერთა პალიტრის, ტიპოგრაფიისა და სტილის შექმნა. ბრენდბუქი, რომელიც განსაზღვრავს თქვენი ბრენდის სახესა და ხასიათს ნებისმიერ გარემოში.
               </p>
@@ -545,47 +543,46 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
             </div>
 
             {/* Service 2 */}
-            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/40 transition duration-300 group">
-              <div className="w-12 h-12 rounded-xl bg-orange-950/40 border border-orange-500/30 flex items-center justify-center text-orange-500 mb-6 group-hover:scale-110 transition duration-300">
+            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/30 hover:shadow-[0_0_30px_rgba(229,9,20,0.06)] transition-all duration-300 group">
+              <div className="w-12 h-12 rounded-xl bg-orange-950/40 border border-orange-500/20 flex items-center justify-center text-orange-500 mb-6 group-hover:scale-110 transition-all duration-300">
                 <Smartphone className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">სოციალური მედიის მართვა (SMM)</h3>
+              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-500 transition-colors duration-200">სოციალური მედიის მართვა (SMM)</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 პოსტერების დიზაინი, რომელიც ზრდის ჩართულობას, ქოფირაითინგი, რომელიც აყალიბებს ბრენდის უნიკალურ ტონს და ყოველკვირეული სთორების რედიზაინი.
               </p>
               <ul className="space-y-2 text-xs text-gray-500">
                 <li className="flex items-center space-x-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
                   <span>კონტენტ კალენდრის შედგენა</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
                   <span>ემოციური და კრეატიული ქოფირაითინგი</span>
                 </li>
               </ul>
             </div>
 
             {/* Service 3 */}
-            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/40 transition duration-300 group">
-              <div className="w-12 h-12 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition duration-300">
+            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/30 hover:shadow-[0_0_30px_rgba(229,9,20,0.06)] transition-all duration-300 group">
+              <div className="w-12 h-12 rounded-xl bg-blue-950/40 border border-blue-500/20 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition-all duration-300">
                 <TrendingUp className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">ედვერთაიზინგი & რეკლამა</h3>
+              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-500 transition-colors duration-200">ედვერთაიზინგი & Რეკლამა</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                სარეკლამო კამპანიები, რომლებიც მიმართულია ზუსტ აუდიტორიაზე. შადოუ რეკლამების (Shadow Ads/Dark Posts) გამოყენება ტესტირებისა და ოპტიმალური ROI-სთვის.
+                სარეკლამო კამპანიები, რომლებიც მიმართულია ზუსტ აუდიტორიაზე. Შადოუ რეკლამების (Shadow Ads/Dark Posts) გამოყენება ტესტირებისა და ოპტიმალური ROI-სთვის.
               </p>
               <ul className="space-y-2 text-xs text-gray-500">
                 <li className="flex items-center space-x-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                   <span>სამიზნე აუდიტორიის კვლევა</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                   <span>A/B ტესტირება და ანალიტიკა</span>
                 </li>
               </ul>
             </div>
-
           </div>
         </div>
       </section>
@@ -593,15 +590,14 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
       {/* PORTFOLIO SECTION */}
       <section id="portfolio" className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div className="space-y-4 max-w-2xl">
               <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">ჩვენი ნამუშევრები</h2>
               <p className="text-3xl sm:text-4xl font-black tracking-tight text-white">პორტფოლიო, რომელიც თავად საუბრობს საკუთარ თავზე</p>
-              <p className="text-gray-400">გადახედეთ ჩვენს მიერ განხორციელებულ ბრენდინგისა და მარკეტინგის ქეისებს.</p>
+              <p className="text-gray-400 text-sm sm:text-base">გადახედეთ ჩვენს მიერ განხორციელებულ ბრენდინგისა და მარკეტინგის ქეისებს.</p>
             </div>
-            <div className="flex items-center space-x-2 bg-[#121212] p-1.5 rounded-xl border border-white/5 self-start md:self-auto">
-              <span className="text-xs text-gray-400 px-3 py-1 bg-white/5 rounded-lg border border-white/5 font-mono">LATEST WORK</span>
+            <div className="flex items-center space-x-2 bg-[#121212] p-1.5 rounded-xl border border-white/5 self-start md:self-auto font-mono text-xs">
+              <span className="text-gray-400 px-3 py-1 bg-white/5 rounded-lg border border-white/5">LATEST WORK</span>
             </div>
           </div>
 
@@ -611,40 +607,20 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               <div
                 key={project.id}
                 onClick={() => setSelectedProject(project)}
-                className="group cursor-pointer bg-[#121212] border border-white/5 rounded-2xl overflow-hidden hover:border-[#E50914]/40 transition duration-300 flex flex-col justify-between"
+                className="group cursor-pointer bg-[#121212] border border-white/5 rounded-2xl overflow-hidden hover:border-[#E50914]/30 hover:shadow-[0_0_25px_rgba(229,9,20,0.05)] transition-all duration-300 flex flex-col justify-between"
               >
-                {/* Visual / Cover */}
                 <div className="aspect-video relative border-b border-white/5 overflow-hidden">
-                  {project.coverImage ? (
-                    <>
-                      <img
-                        src={project.coverImage}
-                        alt={`${project.title} cover`}
-                        className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                      <div className="absolute bottom-4 left-4 z-10">
-                        <div className="inline-block px-3 py-1 rounded-md text-[10px] font-mono tracking-widest uppercase bg-black/55 border border-white/20 text-white">
-                          {project.title}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1c1c1c] to-[#0f0f0f] relative flex items-center justify-center p-6">
-                      <div className="absolute inset-0 bg-radial-gradient from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
-
-                      <div className="relative z-10 text-center space-y-3">
-                        <div className="inline-block px-3 py-1 rounded-md text-[10px] font-mono tracking-widest uppercase bg-black/50 border border-white/10 text-white">
-                          {project.title}
-                        </div>
-                        <p className="text-lg font-black tracking-tight text-white group-hover:text-[#E50914] transition duration-200">
-                          {project.category}
-                        </p>
-                      </div>
-
-                      <div className="absolute -bottom-10 -right-10 w-24 h-24 rounded-full bg-[#E50914]/10 blur-xl group-hover:bg-[#E50914]/20 transition duration-300" />
+                  <img
+                    src={project.coverImage}
+                    alt={`${project.title} cover`}
+                    className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-4 left-4 z-10">
+                    <div className="inline-block px-3 py-1 rounded-md text-[10px] font-mono tracking-widest uppercase bg-black/60 border border-white/10 text-white">
+                      {project.title}
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 <div className="p-6 space-y-4">
@@ -655,74 +631,66 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                       </span>
                     ))}
                   </div>
-
-                  <p className="text-sm text-gray-400 line-clamp-3">
+                  <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed">
                     {project.description}
                   </p>
-
                   <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-xs font-bold text-white group-hover:text-[#E50914] transition duration-200">ქეისის დეტალები</span>
-                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:translate-x-1 group-hover:text-[#E50914] transition duration-200" />
+                    <span className="text-xs font-bold text-white group-hover:text-[#E50914] transition-colors duration-200">ქეისის დეტალები</span>
+                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:translate-x-1 group-hover:text-[#E50914] transition-all duration-200" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* PORTFOLIO MODAL */}
+      {/* PORTFOLIO MODAL — Fixed scroll handling and visual design */}
       {selectedProject && (
         <div
-          className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 overflow-y-auto"
+          className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 transition-opacity duration-300 overflow-y-auto"
           onClick={() => setSelectedProject(null)}
-          style={{ animation: 'fadeIn 0.2s ease both' }}
+          style={{ animation: 'fadeInEffect 0.25s ease-out forwards' }}
         >
-          <style>{`
-            @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
-            @keyframes slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
-          `}</style>
-
-          <div className="min-h-full flex items-start justify-center p-4 py-12">
-            <div
-              className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-              style={{ animation: 'slideUp 0.3s cubic-bezier(0.22,1,0.36,1) both' }}
+          <div
+            className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full shadow-2xl relative flex flex-col my-auto max-h-[90vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            style={{ animation: 'headlineIn 0.35s cubic-bezier(0.25, 1, 0.5, 1) both' }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-4 right-4 z-20 text-gray-400 hover:text-white bg-black/60 backdrop-blur-sm p-2 rounded-full border border-white/10 transition-all duration-200"
             >
-              {/* Close button */}
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white bg-black/70 p-2 rounded-full border border-white/10 transition"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <X className="w-5 h-5" />
+            </button>
 
-              {/* Cover image — full width */}
+            {/* Scrollable Container */}
+            <div className="overflow-y-auto w-full flex-1 touch-pan-y scrollbar-thin">
               {selectedProject.coverImage && (
-                <div className="w-full rounded-t-2xl overflow-hidden">
+                <div className="w-full relative aspect-video bg-black/40 flex items-center justify-center border-b border-white/5">
                   <img
                     src={selectedProject.coverImage}
                     alt={selectedProject.title}
-                    className="w-full h-auto object-contain"
+                    className="w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent opacity-40" />
                 </div>
               )}
 
-              {/* Content */}
-              <div className="p-8 space-y-6">
+              <div className="p-6 sm:p-8 space-y-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-mono tracking-widest text-[#E50914] uppercase">{selectedProject.category}</span>
-                  <h3 className="text-3xl font-black text-white">{selectedProject.title}</h3>
+                  <span className="text-xs font-mono tracking-widest text-[#E50914] uppercase block">{selectedProject.category}</span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white">{selectedProject.title}</h3>
                 </div>
 
-                <p className="text-gray-300 leading-relaxed text-sm">{selectedProject.longDescription}</p>
+                <p className="text-gray-300 leading-relaxed text-sm sm:text-base">{selectedProject.longDescription}</p>
 
-                <div className="space-y-3">
+                <div className="space-y-3 pt-2">
                   <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">მთავარი ელემენტები:</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {selectedProject.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-center space-x-2 bg-black/40 p-3 rounded-lg border border-white/5 text-xs text-gray-300">
+                      <div key={idx} className="flex items-center space-x-2 bg-black/30 p-3.5 rounded-lg border border-white/5 text-xs text-gray-300 hover:border-white/10 transition-colors">
                         <CheckCircle className="w-4 h-4 shrink-0 text-[#E50914]" />
                         <span>{feat}</span>
                       </div>
@@ -730,28 +698,28 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 pt-2">
                   <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">ტეგები:</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedProject.tags.map((tag, idx) => (
-                      <span key={idx} className="text-xs font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-[#333] uppercase tracking-wider">
+                      <span key={idx} className="text-[11px] font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-white/5 uppercase tracking-wider">
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Footer */}
-              <div className="px-8 pb-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <span className="text-xs text-gray-400">გსურთ მსგავსი შედეგი თქვენს ბრენდზე?</span>
-                <button
-                  onClick={() => { setOrderModal(selectedProject); setSelectedProject(null); }}
-                  className="w-full sm:w-auto px-6 py-3 bg-[#E50914] text-white font-bold rounded-lg text-xs hover:bg-red-700 transition"
-                >
-                  მსგავსი პროექტის შეკვეთა
-                </button>
-              </div>
+            {/* Sticky Action Footer */}
+            <div className="p-6 border-t border-white/5 bg-[#121212] flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0 z-10">
+              <span className="text-xs text-gray-400 text-center sm:text-left">გსურთ მსგავსი შედეგი თქვენს ბრენდზე?</span>
+              <button
+                onClick={() => { setOrderModal(selectedProject); setSelectedProject(null); }}
+                className="w-full sm:w-auto px-6 py-3 bg-[#E50914] text-white font-bold rounded-lg text-xs hover:bg-red-700 active:scale-95 transition-all duration-200 shadow-md"
+              >
+                მსგავსი პროექტის შეკვეთა
+              </button>
             </div>
           </div>
         </div>
@@ -763,19 +731,18 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto">
-
             <div className="text-center space-y-4 mb-12">
-              <div className="inline-flex items-center space-x-2 bg-red-950/40 border border-red-500/20 px-3 py-1 rounded-full text-xs text-red-400">
+              <div className="inline-flex items-center space-x-2 bg-red-950/40 border border-red-500/20 px-3 py-1 rounded-full text-xs text-red-400 font-mono">
                 <BrainCircuit className="w-4 h-4 animate-pulse" />
                 <span>ხელოვნური ინტელექტი • GEMINI POWERED</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white">Echelon AI ბრენდ-სტრატეგი</h2>
-              <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+              <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
                 გაქვთ ბიზნესის იდეა, მაგრამ არ იცით როგორ აქციოთ ის ბრენდად? ჩაწერეთ თქვენი იდეა ქვემოთ და ჩვენი AI სტრატეგი უნიკალურ ბრენდ-კონცეფციას წამებში დაგიგენერირებთ!
               </p>
             </div>
 
-            <div className="bg-[#181818] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-xl">
+            <div className="bg-[#181818] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
               <form onSubmit={generateAIStrategy} className="space-y-6">
                 <div>
                   <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-3">დაწერეთ თქვენი ბიზნესის ან სტარტაპის იდეა:</label>
@@ -783,7 +750,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                     value={businessIdea}
                     onChange={(e) => setBusinessIdea(e.target.value)}
                     placeholder="მაგ: მინდა გავხსნა კრეატიული კაფე ქუთაისში, სადაც იქნება წიგნების კითხვა და მშვიდი გარემო..."
-                    className="w-full bg-black/60 border border-white/10 rounded-xl p-4 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] transition h-32 resize-none"
+                    className="w-full bg-black/60 border border-white/10 rounded-xl p-4 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] transition-all duration-200 h-32 resize-none leading-relaxed"
                     required
                   />
                 </div>
@@ -792,7 +759,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                   <button
                     type="submit"
                     disabled={aiLoading}
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-[#E50914] text-white font-bold rounded-xl text-sm hover:bg-red-700 transition duration-200 disabled:bg-gray-800 disabled:text-gray-500 cursor-pointer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-[#E50914] text-white font-bold rounded-xl text-sm hover:bg-red-700 active:scale-95 transition-all duration-200 disabled:bg-gray-800 disabled:text-gray-500"
                   >
                     {aiLoading ? (
                       <>
@@ -809,33 +776,31 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                 </div>
               </form>
 
-              {/* AI Strategy Error Message */}
               {aiError && (
-                <div className="mt-8 bg-red-950/40 border border-red-500/30 p-4 rounded-xl text-sm text-red-400">
+                <div className="mt-8 bg-red-950/40 border border-red-500/30 p-4 rounded-xl text-sm text-red-400 animate-fade-in">
                   {aiError}
                 </div>
               )}
 
-              {/* AI Strategy Results Panel */}
               {aiStrategyResult && (
                 <div className="mt-8 pt-8 border-t border-white/10 space-y-6 animate-fade-in">
-                  <div className="bg-gradient-to-r from-red-950/20 to-orange-950/20 border border-white/5 rounded-xl p-6 space-y-4">
-                    <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase">თქვენი საფირმო სლოგანი</span>
-                    <p className="text-xl sm:text-2xl font-black text-white italic">
+                  <div className="bg-gradient-to-r from-red-950/20 to-orange-950/20 border border-white/5 rounded-xl p-6 space-y-3">
+                    <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase block">თქვენი საფირმო სლოგანი</span>
+                    <p className="text-xl sm:text-2xl font-black text-white italic leading-snug">
                       "{aiStrategyResult.slogan}"
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-black/40 border border-white/5 p-6 rounded-xl space-y-3">
-                      <span className="text-[10px] font-mono tracking-widest text-orange-400 uppercase">ვიზუალური Vibe & სტილი</span>
+                      <span className="text-[10px] font-mono tracking-widest text-orange-400 uppercase block">ვიზუალური Vibe & სტილი</span>
                       <p className="text-sm text-gray-300 leading-relaxed">
                         {aiStrategyResult.vibeDescription}
                       </p>
                     </div>
 
                     <div className="bg-black/40 border border-white/5 p-6 rounded-xl space-y-3">
-                      <span className="text-[10px] font-mono tracking-widest text-blue-400 uppercase">სუპერ სარეკლამო იდეა</span>
+                      <span className="text-[10px] font-mono tracking-widest text-blue-400 uppercase block">სუპერ სარეკლამო იდეა</span>
                       <p className="text-sm text-gray-300 leading-relaxed">
                         {aiStrategyResult.heroIdea}
                       </p>
@@ -847,10 +812,10 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                     <ol className="space-y-3">
                       {aiStrategyResult.strategySteps.map((step, idx) => (
                         <li key={idx} className="flex items-start space-x-3 text-sm text-gray-300">
-                          <span className="font-bold text-[#E50914] font-mono bg-red-950/40 w-6 h-6 rounded-full flex items-center justify-center border border-[#E50914]/20 flex-shrink-0 text-xs mt-0.5">
+                          <span className="font-bold text-[#E50914] font-mono bg-red-950/40 w-6 h-6 rounded-full flex items-center justify-center border border-[#E50914]/20 shrink-0 text-xs mt-0.5">
                             {idx + 1}
                           </span>
-                          <span>{step}</span>
+                          <span className="leading-relaxed">{step}</span>
                         </li>
                       ))}
                     </ol>
@@ -858,17 +823,13 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
                   <div className="text-center pt-4">
                     <p className="text-xs text-gray-500 mb-3">მოგეწონათ ხელოვნური ინტელექტის შემოთავაზება? განვავითაროთ ის ერთად!</p>
-                    <a
-                      href="#contact"
-                      className="inline-flex items-center space-x-2 text-xs font-bold text-[#E50914] hover:underline"
-                    >
+                    <a href="#contact" className="inline-flex items-center space-x-2 text-xs font-bold text-[#E50914] hover:underline">
                       <span>ესაუბრეთ ეშელონის დიზაინერებს ამ იდეაზე</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
                 </div>
               )}
-
             </div>
           </div>
         </div>
@@ -877,7 +838,6 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
       {/* PRICING SECTION */}
       <section id="pricing" className="py-24 bg-[#0d0d0d] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
             <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">ფასები და პაკეტები</h2>
             <p className="text-3xl sm:text-4xl font-black text-white">აირჩიეთ თქვენი ეშელონის პაკეტი</p>
@@ -887,16 +847,16 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
             {/* TAB SELECTOR */}
             <div className="flex justify-center pt-4">
-              <div className="inline-flex bg-[#121212] p-1 rounded-xl border border-white/5">
+              <div className="inline-flex bg-[#121212] p-1.5 rounded-xl border border-white/5 shadow-inner">
                 <button
                   onClick={() => setActiveTab('branding')}
-                  className={`px-6 py-2.5 rounded-lg text-sm font-bold transition ${activeTab === 'branding' ? 'bg-[#E50914] text-white' : 'text-gray-400 hover:text-white'}`}
+                  className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${activeTab === 'branding' ? 'bg-[#E50914] text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
                 >
                   ბრენდინგი & იდენტობა
                 </button>
                 <button
                   onClick={() => setActiveTab('smm')}
-                  className={`px-6 py-2.5 rounded-lg text-sm font-bold transition ${activeTab === 'smm' ? 'bg-[#E50914] text-white' : 'text-gray-400 hover:text-white'}`}
+                  className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${activeTab === 'smm' ? 'bg-[#E50914] text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
                 >
                   სოციალური მედია (SMM)
                 </button>
@@ -910,35 +870,30 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               brandingPackages.map((pkg, idx) => (
                 <div
                   key={idx}
-                  className={`bg-[#121212] border rounded-2xl p-8 flex flex-col justify-between transition duration-300 relative ${pkg.featured ? 'border-[#E50914] shadow-lg shadow-[#E50914]/5 ring-1 ring-[#E50914]' : 'border-white/5'}`}
+                  className={`bg-[#121212] border rounded-2xl p-8 flex flex-col justify-between hover:border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.01)] transition-all duration-300 relative ${pkg.featured ? 'border-[#E50914] shadow-lg shadow-[#E50914]/5 ring-1 ring-[#E50914] lg:scale-[1.02] z-10' : 'border-white/5'}`}
                 >
                   {pkg.featured && (
-                    <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-[#E50914] text-white text-[10px] font-bold tracking-wider rounded-full uppercase">
+                    <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-[#E50914] text-white text-[10px] font-bold tracking-wider rounded-full uppercase shadow-md">
                       ყველაზე პოპულარული
                     </div>
                   )}
 
                   <div className="space-y-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 block mb-1">{pkg.badge}</span>
-                        <h4 className="text-xl font-bold text-white">{pkg.title}</h4>
-                      </div>
+                    <div>
+                      <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 block mb-1">{pkg.badge}</span>
+                      <h4 className="text-xl font-bold text-white">{pkg.title}</h4>
                     </div>
-
                     <div className="flex items-baseline text-white">
                       <span className="text-4xl font-black tracking-tight">{pkg.price}</span>
                     </div>
-
                     <p className="text-xs text-gray-400 leading-relaxed">{pkg.desc}</p>
-
                     <div className="border-t border-white/5 pt-6 space-y-4">
                       {pkg.features.map((feat, fIdx) => (
                         <div key={fIdx} className="flex items-start space-x-3 text-xs">
                           {feat.included ? (
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
                           ) : (
-                            <Lock className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                            <Lock className="w-4 h-4 text-gray-600 mt-0.5 shrink-0" />
                           )}
                           <span className={feat.included ? "text-gray-300" : "text-gray-600 line-through"}>
                             {feat.text}
@@ -951,7 +906,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                   <div className="pt-8">
                     <button
                       onClick={() => setOrderModal(pkg)}
-                      className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs transition duration-200 ${pkg.featured ? 'bg-[#E50914] text-white hover:bg-red-700' : 'bg-[#1a1a1a] text-white hover:bg-white/5 border border-white/10'}`}
+                      className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs transition-all duration-200 active:scale-[0.98] ${pkg.featured ? 'bg-[#E50914] text-white hover:bg-red-700 shadow-md shadow-red-900/10' : 'bg-[#1a1a1a] text-white hover:bg-white/5 border border-white/10'}`}
                     >
                       არჩევა და შეკვეთა
                     </button>
@@ -962,35 +917,30 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               smmPackages.map((pkg, idx) => (
                 <div
                   key={idx}
-                  className={`bg-[#121212] border rounded-2xl p-8 flex flex-col justify-between transition duration-300 relative ${pkg.featured ? 'border-[#E50914] shadow-lg shadow-[#E50914]/5 ring-1 ring-[#E50914]' : 'border-white/5'}`}
+                  className={`bg-[#121212] border rounded-2xl p-8 flex flex-col justify-between hover:border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.01)] transition-all duration-300 relative ${pkg.featured ? 'border-[#E50914] shadow-lg shadow-[#E50914]/5 ring-1 ring-[#E50914] lg:scale-[1.02] z-10' : 'border-white/5'}`}
                 >
                   {pkg.featured && (
-                    <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-[#E50914] text-white text-[10px] font-bold tracking-wider rounded-full uppercase">
+                    <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-[#E50914] text-white text-[10px] font-bold tracking-wider rounded-full uppercase shadow-md">
                       რეკომენდებული
                     </div>
                   )}
 
                   <div className="space-y-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 block mb-1">{pkg.badge}</span>
-                        <h4 className="text-xl font-bold text-white">{pkg.title}</h4>
-                      </div>
+                    <div>
+                      <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 block mb-1">{pkg.badge}</span>
+                      <h4 className="text-xl font-bold text-white">{pkg.title}</h4>
                     </div>
-
                     <div className="flex items-baseline text-white">
                       <span className="text-4xl font-black tracking-tight">{pkg.price}</span>
                     </div>
-
                     <p className="text-xs text-gray-400 leading-relaxed">{pkg.desc}</p>
-
                     <div className="border-t border-white/5 pt-6 space-y-4">
                       {pkg.features.map((feat, fIdx) => (
                         <div key={fIdx} className="flex items-start space-x-3 text-xs">
                           {feat.included ? (
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
                           ) : (
-                            <Lock className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                            <Lock className="w-4 h-4 text-gray-600 mt-0.5 shrink-0" />
                           )}
                           <span className={feat.included ? "text-gray-300" : "text-gray-600 line-through"}>
                             {feat.text}
@@ -1003,7 +953,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                   <div className="pt-8">
                     <button
                       onClick={() => setOrderModal(pkg)}
-                      className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs transition duration-200 ${pkg.featured ? 'bg-[#E50914] text-white hover:bg-red-700' : 'bg-[#1a1a1a] text-white hover:bg-white/5 border border-white/10'}`}
+                      className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs transition-all duration-200 active:scale-[0.98] ${pkg.featured ? 'bg-[#E50914] text-white hover:bg-red-700 shadow-md shadow-red-900/10' : 'bg-[#1a1a1a] text-white hover:bg-white/5 border border-white/10'}`}
                     >
                       არჩევა და შეკვეთა
                     </button>
@@ -1014,43 +964,41 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
           </div>
 
           {/* DYNAMIC PRICE ESTIMATOR / CALCULATOR */}
-          <div className="mt-20 bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-10 max-w-4xl mx-auto">
+          <div className="mt-20 bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-10 max-w-4xl mx-auto hover:border-white/10 transition-colors duration-300 shadow-2xl">
             <div className="flex items-center space-x-3 mb-6">
               <Sliders className="w-6 h-6 text-[#E50914]" />
               <h3 className="text-xl font-black text-white">ინდივიდუალური პაკეტის ამწყობი</h3>
             </div>
-
             <p className="text-xs text-gray-400 mb-8 leading-relaxed">
               გჭირდებათ სპეციფიკური მოთხოვნები? ააწყვეთ თქვენი პაკეტი და ნახეთ სავარაუდო ფასი.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Controls */}
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-gray-300 uppercase">ლოგოს დიზაინი (+500 ₾)</label>
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wide">ლოგოს დიზაინი (+500 ₾)</label>
                   <input
                     type="checkbox"
                     checked={customServices.logo}
                     onChange={(e) => setCustomServices({ ...customServices, logo: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black"
+                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black accent-[#E50914]"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-gray-300 uppercase">ბრენდბუქი & გრიდები (+1200 ₾)</label>
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wide">ბრენდბუქი & გრიდები (+1200 ₾)</label>
                   <input
                     type="checkbox"
                     checked={customServices.guidelines}
                     onChange={(e) => setCustomServices({ ...customServices, guidelines: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black"
+                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black accent-[#E50914]"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <label className="text-xs font-bold text-gray-300 uppercase">პოსტების რაოდენობა: {customServices.posts}</label>
-                    <span className="text-xs font-mono text-[#E50914]">({customServices.posts * 90} ₾)</span>
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-gray-300 uppercase tracking-wide">პოსტების რაოდენობა: {customServices.posts}</label>
+                    <span className="text-xs font-mono font-bold text-[#E50914]">({customServices.posts * 90} ₾)</span>
                   </div>
                   <input
                     type="range"
@@ -1058,14 +1006,14 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                     max="30"
                     value={customServices.posts}
                     onChange={(e) => setCustomServices({ ...customServices, posts: parseInt(e.target.value, 10) })}
-                    className="w-full accent-[#E50914]"
+                    className="w-full accent-[#E50914] bg-black/40"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <label className="text-xs font-bold text-gray-300 uppercase">სთორების რაოდენობა: {customServices.stories}</label>
-                    <span className="text-xs font-mono text-[#E50914]">({customServices.stories * 25} ₾)</span>
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-gray-300 uppercase tracking-wide">სთორების რაოდენობა: {customServices.stories}</label>
+                    <span className="text-xs font-mono font-bold text-[#E50914]">({customServices.stories * 25} ₾)</span>
                   </div>
                   <input
                     type="range"
@@ -1073,45 +1021,44 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                     max="30"
                     value={customServices.stories}
                     onChange={(e) => setCustomServices({ ...customServices, stories: parseInt(e.target.value, 10) })}
-                    className="w-full accent-[#E50914]"
+                    className="w-full accent-[#E50914] bg-black/40"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-gray-300 uppercase">რეკლამის მართვა (Ad set) (+400 ₾)</label>
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wide">რეკლამის მართვა (Ad set) (+400 ₾)</label>
                   <input
                     type="checkbox"
                     checked={customServices.advertising}
                     onChange={(e) => setCustomServices({ ...customServices, advertising: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black"
+                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black accent-[#E50914]"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-gray-300 uppercase">შადოუ რეკლამების ტესტირება (+250 ₾)</label>
+                  <label className="text-xs font-bold text-gray-300 uppercase tracking-wide">შადოუ რეკლამების ტესტირება (+250 ₾)</label>
                   <input
                     type="checkbox"
                     checked={customServices.shadowTesting}
                     onChange={(e) => setCustomServices({ ...customServices, shadowTesting: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black"
+                    className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black accent-[#E50914]"
                   />
                 </div>
               </div>
 
               {/* Dynamic Calculation Output */}
-              <div className="bg-black/40 border border-white/5 rounded-xl p-6 flex flex-col justify-between text-center md:text-left">
+              <div className="bg-black/40 border border-white/5 rounded-xl p-6 flex flex-col justify-between text-center md:text-left shadow-inner">
                 <div className="space-y-4">
                   <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase block">კალკულაციის ჯამი:</span>
-                  <div className="text-4xl sm:text-5xl font-black text-white">{calculateCustomPrice()} ₾</div>
+                  <div className="text-4xl sm:text-5xl font-black text-white tracking-tight">{calculateCustomPrice()} ₾</div>
                   <p className="text-xs text-gray-400 leading-relaxed">
                     ეს არის ინდივიდუალური გაანგარიშება. საბოლოო პაკეტი დაზუსტდება თქვენთან დეტალური საუბრის შემდეგ.
                   </p>
                 </div>
-
                 <div className="pt-6">
                   <button
                     onClick={() => setOrderModal({ title: 'ინდივიდუალური პაკეტი', price: `${calculateCustomPrice()} ₾`, desc: 'თქვენს მიერ აწყობილი კალკულაცია' })}
-                    className="w-full py-4 bg-white text-black font-bold rounded-xl text-xs hover:bg-gray-100 transition active:scale-95"
+                    className="w-full py-4 bg-white text-black font-bold rounded-xl text-xs hover:bg-gray-100 transition active:scale-95 shadow-md font-sans"
                   >
                     არჩეული პაკეტის შეკვეთა
                   </button>
@@ -1119,7 +1066,6 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -1127,7 +1073,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
       <section id="contact" className="py-24 bg-[#0a0a0a] border-t border-[#1e1e1e] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-
+            
             {/* Info panel */}
             <div className="lg:col-span-5 space-y-8">
               <div className="space-y-4">
@@ -1179,7 +1125,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
             {/* Direct message form */}
             <div className="lg:col-span-7">
-              <div className="bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-10">
+              <div className="bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-10 shadow-2xl">
                 <h3 className="text-xl font-bold text-white mb-6">მოგვწერეთ პირდაპირ</h3>
 
                 <form onSubmit={(e) => { e.preventDefault(); setOrderSuccess(true); setTimeout(() => setOrderSuccess(false), 3000); }} className="space-y-6">
@@ -1188,7 +1134,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                       <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">თქვენი სახელი:</label>
                       <input
                         type="text"
-                        className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition"
+                        className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition-all"
                         placeholder="მაგ: გიორგი"
                         required
                       />
@@ -1197,7 +1143,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                       <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">ტელეფონის ნომერი:</label>
                       <input
                         type="tel"
-                        className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition"
+                        className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition-all"
                         placeholder="მაგ: +995 5..."
                         required
                       />
@@ -1208,7 +1154,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                     <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">ბრენდის ან კომპანიის დასახელება:</label>
                     <input
                       type="text"
-                      className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition"
+                      className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition-all"
                       placeholder="მაგ: ეშელონ კაფე"
                     />
                   </div>
@@ -1216,7 +1162,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">შეტყობინება / მოთხოვნები:</label>
                     <textarea
-                      className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition h-32 resize-none"
+                      className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition-all h-32 resize-none leading-relaxed"
                       placeholder="დაწერეთ თქვენი სურვილები..."
                       required
                     />
@@ -1225,7 +1171,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-8 py-4 bg-[#E50914] text-white font-bold rounded-xl text-xs hover:bg-red-700 transition duration-200 active:scale-95"
+                      className="w-full sm:w-auto px-8 py-4 bg-[#E50914] text-white font-bold rounded-xl text-xs hover:bg-red-700 active:scale-95 transition-all duration-200 shadow-md shadow-red-900/10"
                     >
                       გაგზავნა
                     </button>
@@ -1233,7 +1179,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                 </form>
 
                 {orderSuccess && (
-                  <div className="mt-6 bg-green-950/40 border border-green-500/30 p-4 rounded-xl text-xs text-green-400">
+                  <div className="mt-6 bg-green-950/40 border border-green-500/30 p-4 rounded-xl text-xs text-green-400 animate-fade-in">
                     შეტყობინება წარმატებით გაიგზავნა! ეშელონის სტრატეგები მალე დაგიკავშირდებიან.
                   </div>
                 )}
@@ -1250,7 +1196,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-lg overflow-hidden border border-[#E50914]/30">
-                <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Eshelon Logo" className="w-full h-full object-cover" />
+                <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Echelon Logo" className="w-full h-full object-cover" />
               </div>
               <div>
                 <span className="text-md font-bold tracking-widest text-white block">ESHELON</span>
@@ -1262,12 +1208,12 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               © {new Date().getFullYear()} ESHELON DIGITAL AGENCY. ყველა უფლება დაცულია.
             </p>
 
-            <div className="flex items-center space-x-4">
-              <a href="#" className="text-gray-500 hover:text-white transition text-xs">Facebook</a>
+            <div className="flex items-center space-x-4 font-mono text-xs">
+              <a href="#" className="text-gray-500 hover:text-white transition-colors">Facebook</a>
               <span className="text-gray-800">•</span>
-              <a href="#" className="text-gray-500 hover:text-white transition text-xs">Instagram</a>
+              <a href="#" className="text-gray-500 hover:text-white transition-colors">Instagram</a>
               <span className="text-gray-800">•</span>
-              <a href="#" className="text-gray-500 hover:text-white transition text-xs">LinkedIn</a>
+              <a href="#" className="text-gray-500 hover:text-white transition-colors">LinkedIn</a>
             </div>
           </div>
         </div>
@@ -1275,20 +1221,20 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
 
       {/* DIRECT PACKAGE ORDER MODAL */}
       {orderModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-[#121212] border border-white/10 rounded-2xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
             <button
               onClick={() => setOrderModal(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/40 p-1.5 rounded-full border border-white/5 transition"
+              className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/40 p-1.5 rounded-full border border-white/5 transition-all"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="space-y-4 mb-6">
-              <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase">პაკეტის შეკვეთა</span>
-              <h3 className="text-2xl font-black text-white">{orderModal.title}</h3>
+            <div className="space-y-3 mb-6">
+              <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase block">პაკეტის შეკვეთა</span>
+              <h3 className="text-xl font-black text-white">{orderModal.title}</h3>
               <div className="text-lg font-bold text-[#E50914]">{orderModal.price}</div>
-              <p className="text-xs text-gray-400">{orderModal.desc}</p>
+              <p className="text-xs text-gray-400 leading-relaxed">{orderModal.desc}</p>
             </div>
 
             <form onSubmit={handleOrderSubmit} className="space-y-4">
@@ -1321,14 +1267,14 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                 <textarea
                   value={orderForm.note}
                   onChange={(e) => setOrderForm({ ...orderForm, note: e.target.value })}
-                  className="w-full bg-black/60 border border-white/10 rounded-lg p-3 text-white text-xs focus:outline-none focus:border-[#E50914] transition h-20 resize-none"
+                  className="w-full bg-black/60 border border-white/10 rounded-lg p-3 text-white text-xs focus:outline-none focus:border-[#E50914] transition h-20 resize-none leading-relaxed"
                   placeholder="დამატებითი მოთხოვნები..."
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-4 bg-[#E50914] text-white font-bold rounded-xl text-xs hover:bg-red-700 transition"
+                className="w-full py-4 bg-[#E50914] text-white font-bold rounded-xl text-xs hover:bg-red-700 transition shadow-md shadow-red-900/10"
               >
                 დადასტურება და შეკვეთა
               </button>
