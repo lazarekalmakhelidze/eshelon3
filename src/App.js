@@ -1,11 +1,13 @@
 import './style.css';
+
 import React, { useState, useEffect } from 'react';
 import {
-  Compass, Sparkles, TrendingUp, Smartphone, ArrowRight,
-  Menu, X, MapPin, Mail, Phone, Sliders, Zap, Check, BrainCircuit, Lock, CheckCircle, ChevronRight
+  Compass, Sparkles, Award, Target, Layers, ChevronRight, CheckCircle,
+  TrendingUp, Zap, Smartphone, FileText, ArrowRight, MessageSquare,
+  Menu, X, MapPin, Mail, Phone, ExternalLink, ChevronDown, Info,
+  Sliders, Send, Check, BrainCircuit, Lock
 } from 'lucide-react';
 
-// Data arrays remain exactly as you defined them
 const portfolioData = [
   {
     id: 'lokross',
@@ -59,7 +61,7 @@ const portfolioData = [
     id: 'education',
     title: 'საგანმანათლებლო პოსტერები',
     category: 'საიმიჯო & ფილოსოფიური სერია',
-    description: '„არ გაუშვა შანსი ხელიდან“ — ბეთჰოვენის, ჯორდანის, ტესლასა და არმსტრონგის მაგალითზე აგებული მისტიკური, მოტივაციური კამპანია.',
+    description: '„არ გაუშვა შანსი ხელიდან" — ბეთჰოვენის, ჯორდანის, ტესლასა და არმსტრონგის მაგალითზე აგებული მისტიკური, მოტივაციური კამპანია.',
     longDescription: 'ეს სერია აგებულია ძლიერ ფილოსოფიურ იდეაზე: "წარმოიდგინე, რომ ბეთჰოვენის სიყრუე დასასრულად ჩათვლილიყო...". მუქი, მისტიკური განათებები, დრამატული ტიპოგრაფია და გრეხილი ტექსტები მომხმარებლის მზერას აჯაჭვებს და აიძულებს ბოლომდე წაიკითხოს ბრენდის სათქმელი.',
     color: '#ff1744',
     bgClass: 'bg-red-950/40 border-red-500/30 text-red-400',
@@ -167,6 +169,24 @@ export default function EchelonApp() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
+  const [customServices, setCustomServices] = useState({
+    logo: true,
+    guidelines: false,
+    posts: 12,
+    stories: 5,
+    advertising: true,
+    shadowTesting: false
+  });
+
+  const [businessIdea, setBusinessIdea] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiStrategyResult, setAiStrategyResult] = useState(null);
+  const [aiError, setAiError] = useState("");
+
+  const [orderModal, setOrderModal] = useState(null);
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderForm, setOrderForm] = useState({ name: '', phone: '', note: '' });
+
   // Prevent body scroll when modals are open
   useEffect(() => {
     if (selectedProject || orderModal) {
@@ -175,30 +195,14 @@ export default function EchelonApp() {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; };
-  }, [selectedProject, activeTab]); // Also listen to orderModal if implemented
+  }, [selectedProject, orderModal]);
 
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
-    const x = (clientX / window.innerWidth - 0.5) * 20;
-    const y = (clientY / window.innerHeight - 0.5) * 20;
+    const x = (clientX / window.innerWidth - 0.5) * 2;
+    const y = (clientY / window.innerHeight - 0.5) * 2;
     setMouse({ x, y });
   };
-
-  const scrollToTop = (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const [customServices, setCustomServices] = useState({
-    logo: true, guidelines: false, posts: 12, stories: 5, advertising: true, shadowTesting: false
-  });
-  const [businessIdea, setBusinessIdea] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiStrategyResult, setAiStrategyResult] = useState(null);
-  const [aiError, setAiError] = useState("");
-  const [orderModal, setOrderModal] = useState(null);
-  const [orderSuccess, setOrderSuccess] = useState(false);
-  const [orderForm, setOrderForm] = useState({ name: '', phone: '', note: '' });
 
   const calculateCustomPrice = () => {
     let base = 0;
@@ -231,13 +235,56 @@ export default function EchelonApp() {
     setAiError("");
     setAiStrategyResult(null);
 
-    const apiKey = ""; // Insert Key
+    const apiKey = "";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-    const systemPrompt = `You are the brilliant and bold Creative Director of "Echelon"...`; // Truncated for brevity
-    
-    // ... AI Implementation remains unchanged
-    setTimeout(() => { setAiLoading(false); }, 1000); // Mock for now
+    const systemPrompt = `You are the brilliant and bold Creative Director of "Echelon" (ეშელონი) Digital Agency.
+Your agency combines deep strategic chess-like planning and explosive anime-styled artistic creativity (represented by chess knight and pencil symbols).
+The user is giving you their business/startup idea.
+Generate a sharp, encouraging, and highly professional branding strategy response in GEORGIAN language.
+Your response MUST be in structured JSON format with the following keys:
+"slogan": An epic, memorable, punchy branding slogan in Georgian.
+"vibeDescription": A short description of the visual vibe/style they should adopt (color palette, styling notes).
+"strategySteps": Array of 3 key strategic actions they must take immediately to win the market.
+"heroIdea": A unique, mind-blowing social media or advertising campaign concept.
+Keep the style bold, youthful, and highly confident (as a top-tier digital agency). Do not mention any JSON syntax in the text, just return the valid JSON.`;
+
+    const payload = {
+      contents: [{ parts: [{ text: `ჩემი ბიზნესის იდეაა: ${businessIdea}. მომიფიქრე ეშელონის სტილის სტრატეგია!` }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "OBJECT",
+          properties: {
+            slogan: { type: "STRING" },
+            vibeDescription: { type: "STRING" },
+            strategySteps: { type: "ARRAY", items: { type: "STRING" } },
+            heroIdea: { type: "STRING" }
+          },
+          required: ["slogan", "vibeDescription", "strategySteps", "heroIdea"]
+        }
+      }
+    };
+
+    try {
+      const data = await fetchWithBackoff(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (textResponse) {
+        setAiStrategyResult(JSON.parse(textResponse));
+      } else {
+        throw new Error("პასუხი ვერ მივიღეთ.");
+      }
+    } catch (err) {
+      console.error(err);
+      setAiError("უკაცრავად, სტრატეგიის გენერირებისას მოხდა შეცდომა. გთხოვთ, სცადოთ მოგვიანებით.");
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const handleOrderSubmit = (e) => {
@@ -251,8 +298,8 @@ export default function EchelonApp() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-[#f2f2f2] font-sans antialiased selection:bg-[#E50914] selection:text-white overflow-x-hidden">
-      
+    <div className="min-h-screen bg-[#0d0d0d] text-[#f2f2f2] font-sans antialiased selection:bg-[#E50914] selection:text-white">
+
       {/* GLOWING HEADER BACKGROUND ACCENT */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-[#E50914]/10 via-transparent to-transparent blur-3xl pointer-events-none -z-10" />
 
@@ -261,7 +308,11 @@ export default function EchelonApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-3">
-              <a href="#" onClick={scrollToTop} className="flex items-center space-x-3 group">
+              <a
+                href="#hero"
+                onClick={e => { e.preventDefault(); document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="flex items-center space-x-3 group"
+              >
                 <div className="relative cursor-pointer">
                   <div className="absolute -inset-1 bg-gradient-to-r from-[#E50914] to-orange-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-500" />
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-[#E50914]/50">
@@ -288,60 +339,89 @@ export default function EchelonApp() {
                 კონტაქტი
               </a>
             </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-400 hover:text-white focus:outline-none">
+                {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="md:hidden bg-[#0d0d0d] border-b border-[#262626] px-4 py-6 space-y-4">
+            <a href="#services" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">სერვისები</a>
+            <a href="#portfolio" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">პორტფოლიო</a>
+            <a href="#pricing" onClick={() => setMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[#E50914]">ფასები</a>
+            <a href="#ai-strategist" onClick={() => setMenuOpen(false)} className="flex items-center space-x-2 text-base font-medium text-red-400">
+              <BrainCircuit className="w-5 h-5 animate-pulse" />
+              <span>Echelon AI ბრენდ-სტრატეგი</span>
+            </a>
+            <a href="#contact" onClick={() => setMenuOpen(false)} className="block w-full text-center py-3 rounded-lg text-base font-bold bg-[#E50914] text-white">
+              დაგვიკავშირდით
+            </a>
+          </div>
+        )}
       </nav>
 
-      {/* HERO SECTION */}
+      {/* ===================== HERO SECTION (V1 — improved parallax + glow) ===================== */}
       <section id="hero" className="relative overflow-hidden min-h-[92vh] flex items-center" onMouseMove={handleMouseMove}>
         <style>{`
           @keyframes coverReveal {
-            from { opacity: 0; transform: scale(1.05); }
-            to   { opacity: 0.8; transform: scale(1); }
+            from { opacity: 0; transform: scale(1.08); }
+            to   { opacity: 1; transform: scale(1); }
+          }
+          @keyframes headlineGlow {
+            0%,100% { filter: drop-shadow(0 0 20px rgba(229,9,20,0.6)) drop-shadow(0 0 50px rgba(229,9,20,0.2)); }
+            50%      { filter: drop-shadow(0 0 38px rgba(255,100,0,0.85)) drop-shadow(0 0 80px rgba(229,9,20,0.5)); }
           }
           @keyframes headlineIn {
             from { opacity: 0; transform: translateY(32px); }
             to   { opacity: 1; transform: translateY(0); }
           }
+          html { scroll-behavior: smooth; }
         `}</style>
 
-        {/* Cover image wrapper with parallax */}
-        <div 
-          className="absolute inset-0 transition-transform duration-[600ms] ease-out will-change-transform"
-          style={{ transform: `translate(${mouse.x}px, ${mouse.y}px) scale(1.02)` }}
+        {/* Cover image wrapper — parallax on mouse move */}
+        <div
+          className="absolute inset-0 transition-transform duration-[120ms] ease-out"
+          style={{ transform: `translate(${mouse.x * -10}px, ${mouse.y * -6}px) scale(1.04)` }}
         >
           <img
             src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
             alt="Eshelon Cover"
             className="hidden lg:block w-full h-full object-cover object-right"
-            style={{ animation: 'coverReveal 2.5s cubic-bezier(0.22,1,0.36,1) both' }}
+            style={{ animation: 'coverReveal 1.8s cubic-bezier(0.22,1,0.36,1) both' }}
           />
           <img
             src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
             alt="Eshelon Cover"
             className="block lg:hidden w-full h-full object-cover object-right"
-            style={{ animation: 'coverReveal 2.5s cubic-bezier(0.22,1,0.36,1) both' }}
+            style={{ animation: 'coverReveal 1.8s cubic-bezier(0.22,1,0.36,1) both' }}
           />
         </div>
 
-        {/* Improved Soft Gradients to blend image edges seamlessly */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/90 to-transparent w-full lg:w-[70%] z-10" />
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/80 to-transparent z-10" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0d0d0d]/60 to-transparent z-10 hidden lg:block" />
+        {/* Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/80 to-[#0d0d0d]/10" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/80 to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0d0d0d]/40 to-transparent" />
 
         {/* Content */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="max-w-xl lg:max-w-2xl space-y-8">
             <div className="inline-flex items-center space-x-2 bg-red-950/60 border border-[#E50914]/40 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914]">
               <Sparkles className="w-4 h-4 text-red-500 animate-spin-slow" />
               <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
             </div>
 
+            {/* Headline PNG — entrance + glow pulse */}
             <img
               src="https://i.postimg.cc/gj0h2dyY/teqsst1.png"
               alt="Headline"
               className="w-full max-w-lg drop-shadow-2xl"
-              style={{ animation: 'headlineIn 1s 0.4s cubic-bezier(0.22,1,0.36,1) both' }}
+              style={{ animation: 'headlineIn 1s 0.4s cubic-bezier(0.22,1,0.36,1) both, headlineGlow 3.5s 1.4s ease-in-out infinite' }}
             />
 
             <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -353,13 +433,90 @@ export default function EchelonApp() {
                 ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲢᲔᲑᲘ
               </a>
             </div>
+
+            {/* Key metrics */}
+            <div className="pt-8 grid grid-cols-3 gap-6 max-w-md border-t border-white/10">
+              <div>
+                <div className="text-2xl sm:text-3xl font-black text-white">98%</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">კმაყოფილი კლიენტი</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">შექმნილი იდენტობა</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-black text-white">2.5X</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">ROI გაყიდვებში</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* PORTFOLIO SECTION (Snippet modified for UI/UX) */}
+      {/* CORE SERVICES */}
+      <section id="services" className="py-24 bg-[#0a0a0a] border-y border-[#1e1e1e] relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
+            <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">ᲠᲐᲡ ᲕᲐᲙᲔᲗᲔᲑᲗ</h2>
+            <p className="text-3xl sm:text-4xl font-black tracking-tight text-white">ᲡᲠᲣᲚᲘ ᲪᲘᲤᲠᲣᲚᲘ ᲐᲠᲡᲔᲜᲐᲚᲘ ᲗᲥᲕᲔᲜᲘ ᲑᲘᲖᲜᲔᲡᲘᲡ ᲬᲐᲠᲛᲐᲢᲔᲑᲘᲡᲗᲕᲘᲡ</p>
+            <p className="text-gray-400">ჩვენი მომსახურებები მოიცავს ყველაფერს, რაც გჭირდებათ იდეიდან – მილიონიან ბრენდამდე მისასვლელად.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/40 transition duration-300 group">
+              <div className="w-12 h-12 rounded-xl bg-red-950/40 border border-red-500/30 flex items-center justify-center text-[#E50914] mb-6 group-hover:scale-110 transition duration-300">
+                <Compass className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">ვიზუალური იდენტობა</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">ლოგოების, ფერთა პალიტრის, ტიპოგრაფიისა და სტილის შექმნა. ბრენდბუქი, რომელიც განსაზღვრავს თქვენი ბრენდის სახესა და ხასიათს ნებისმიერ გარემოში.</p>
+              <ul className="space-y-2 text-xs text-gray-500">
+                <li className="flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" /><span>გეომეტრიულად სრულყოფილი ლოგოები</span></li>
+                <li className="flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" /><span>სრული ტიპოგრაფიული სისტემა</span></li>
+              </ul>
+            </div>
+
+            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/40 transition duration-300 group">
+              <div className="w-12 h-12 rounded-xl bg-orange-950/40 border border-orange-500/30 flex items-center justify-center text-orange-500 mb-6 group-hover:scale-110 transition duration-300">
+                <Smartphone className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">სოციალური მედიის მართვა (SMM)</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">პოსტერების დიზაინი, რომელიც ზრდის ჩართულობას, ქოფირაითინგი, რომელიც აყალიბებს ბრენდის უნიკალურ ტონს და ყოველკვირეული სთორების რედიზაინი.</p>
+              <ul className="space-y-2 text-xs text-gray-500">
+                <li className="flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" /><span>კონტენტ კალენდრის შედგენა</span></li>
+                <li className="flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" /><span>ემოციური და კრეატიული ქოფირაითინგი</span></li>
+              </ul>
+            </div>
+
+            <div className="bg-[#121212] border border-white/5 p-8 rounded-2xl hover:border-[#E50914]/40 transition duration-300 group">
+              <div className="w-12 h-12 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition duration-300">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">ედვერთაიზინგი & რეკლამა</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">სარეკლამო კამპანიები, რომლებიც მიმართულია ზუსტ აუდიტორიაზე. შადოუ რეკლამების (Shadow Ads/Dark Posts) გამოყენება ტესტირებისა და ოპტიმალური ROI-სთვის.</p>
+              <ul className="space-y-2 text-xs text-gray-500">
+                <li className="flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" /><span>სამიზნე აუდიტორიის კვლევა</span></li>
+                <li className="flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-[#E50914]" /><span>A/B ტესტირება და ანალიტიკა</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== PORTFOLIO SECTION (V1 — improved cards) ===================== */}
       <section id="portfolio" className="py-24 relative bg-[#0a0a0a]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="space-y-4 max-w-2xl">
+              <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">ჩვენი ნამუშევრები</h2>
+              <p className="text-3xl sm:text-4xl font-black tracking-tight text-white">პორტფოლიო, რომელიც თავად საუბრობს საკუთარ თავზე</p>
+              <p className="text-gray-400">გადახედეთ ჩვენს მიერ განხორციელებულ ბრენდინგისა და მარკეტინგის ქეისებს.</p>
+            </div>
+            <div className="flex items-center space-x-2 bg-[#121212] p-1.5 rounded-xl border border-white/5 self-start md:self-auto">
+              <span className="text-xs text-gray-400 px-3 py-1 bg-white/5 rounded-lg border border-white/5 font-mono">LATEST WORK</span>
+            </div>
+          </div>
+
+          {/* V1-style grid cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {portfolioData.map((project) => (
               <div
@@ -376,7 +533,6 @@ export default function EchelonApp() {
                     </div>
                   </div>
                 </div>
-                {/* Text Content Area */}
                 <div className="p-6 space-y-4">
                   <div className="flex flex-wrap gap-2">
                     {project.tags.slice(0, 2).map((tag, idx) => (
@@ -386,6 +542,10 @@ export default function EchelonApp() {
                     ))}
                   </div>
                   <p className="text-sm text-gray-400 line-clamp-3 group-hover:text-gray-300 transition">{project.description}</p>
+                  <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-xs font-bold text-white group-hover:text-[#E50914] transition duration-200">ქეისის დეტალები</span>
+                    <ChevronRight className="w-4 h-4 text-gray-500 group-hover:translate-x-1 group-hover:text-[#E50914] transition duration-200" />
+                  </div>
                 </div>
               </div>
             ))}
@@ -393,13 +553,17 @@ export default function EchelonApp() {
         </div>
       </section>
 
-      {/* PORTFOLIO MODAL WITH FIXED SCROLL */}
+      {/* ===================== PORTFOLIO MODAL (V1 — fixed scroll + full-width image) ===================== */}
       {selectedProject && (
         <div
           className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
           onClick={() => setSelectedProject(null)}
           style={{ animation: 'fadeIn 0.3s ease both' }}
         >
+          <style>{`
+            @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+            @keyframes slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
+          `}</style>
           <div className="min-h-full flex items-start justify-center p-4 py-12">
             <div
               className="bg-[#121212] border border-white/10 rounded-2xl max-w-3xl w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden"
@@ -426,13 +590,406 @@ export default function EchelonApp() {
                   <h3 className="text-3xl sm:text-4xl font-black text-white">{selectedProject.title}</h3>
                 </div>
                 <p className="text-gray-300 leading-relaxed text-sm sm:text-base">{selectedProject.longDescription}</p>
+
+                <div className="space-y-3">
+                  <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">მთავარი ელემენტები:</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedProject.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-center space-x-2 bg-black/40 p-3 rounded-lg border border-white/5 text-xs text-gray-300">
+                        <CheckCircle className="w-4 h-4 shrink-0 text-[#E50914]" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">ტეგები:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tags.map((tag, idx) => (
+                      <span key={idx} className="text-xs font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-[#333] uppercase tracking-wider">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-8 pb-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <span className="text-xs text-gray-400">გსურთ მსგავსი შედეგი თქვენს ბრენდზე?</span>
+                <button
+                  onClick={() => { setOrderModal(selectedProject); setSelectedProject(null); }}
+                  className="w-full sm:w-auto px-6 py-3 bg-[#E50914] text-white font-bold rounded-lg text-xs hover:bg-red-700 transition"
+                >
+                  მსგავსი პროექტის შეკვეთა
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ... Rest of the sections remain structured ... */}
+      {/* ECHELON AI STRATEGIST */}
+      <section id="ai-strategist" className="py-24 bg-gradient-to-b from-[#0a0a0a] to-[#121212] border-t border-[#1e1e1e] relative">
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-red-600/5 blur-3xl pointer-events-none rounded-full" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center space-y-4 mb-12">
+              <div className="inline-flex items-center space-x-2 bg-red-950/40 border border-red-500/20 px-3 py-1 rounded-full text-xs text-red-400">
+                <BrainCircuit className="w-4 h-4 animate-pulse" />
+                <span>ხელოვნური ინტელექტი • GEMINI POWERED</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white">Echelon AI ბრენდ-სტრატეგი</h2>
+              <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+                გაქვთ ბიზნესის იდეა, მაგრამ არ იცით როგორ აქციოთ ის ბრენდად? ჩაწერეთ თქვენი იდეა ქვემოთ და ჩვენი AI სტრატეგი უნიკალურ ბრენდ-კონცეფციას წამებში დაგიგენერირებთ!
+              </p>
+            </div>
+
+            <div className="bg-[#181818] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-xl">
+              <form onSubmit={generateAIStrategy} className="space-y-6">
+                <div>
+                  <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-3">დაწერეთ თქვენი ბიზნესის ან სტარტაპის იდეა:</label>
+                  <textarea
+                    value={businessIdea}
+                    onChange={(e) => setBusinessIdea(e.target.value)}
+                    placeholder="მაგ: მინდა გავხსნა კრეატიული კაფე ქუთაისში, სადაც იქნება წიგნების კითხვა და მშვიდი გარემო..."
+                    className="w-full bg-black/60 border border-white/10 rounded-xl p-4 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] transition h-32 resize-none"
+                    required
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={aiLoading}
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-[#E50914] text-white font-bold rounded-xl text-sm hover:bg-red-700 transition duration-200 disabled:bg-gray-800 disabled:text-gray-500 cursor-pointer"
+                  >
+                    {aiLoading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                        მზადდება სტრატეგია...
+                      </>
+                    ) : (
+                      <>
+                        სტრატეგიის გენერირება
+                        <Zap className="w-4 h-4 ml-2 fill-white text-white" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+
+              {aiError && (
+                <div className="mt-8 bg-red-950/40 border border-red-500/30 p-4 rounded-xl text-sm text-red-400">{aiError}</div>
+              )}
+
+              {aiStrategyResult && (
+                <div className="mt-8 pt-8 border-t border-white/10 space-y-6">
+                  <div className="bg-gradient-to-r from-red-950/20 to-orange-950/20 border border-white/5 rounded-xl p-6 space-y-4">
+                    <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase">თქვენი საფირმო სლოგანი</span>
+                    <p className="text-xl sm:text-2xl font-black text-white italic">"{aiStrategyResult.slogan}"</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-black/40 border border-white/5 p-6 rounded-xl space-y-3">
+                      <span className="text-[10px] font-mono tracking-widest text-orange-400 uppercase">ვიზუალური Vibe & სტილი</span>
+                      <p className="text-sm text-gray-300 leading-relaxed">{aiStrategyResult.vibeDescription}</p>
+                    </div>
+                    <div className="bg-black/40 border border-white/5 p-6 rounded-xl space-y-3">
+                      <span className="text-[10px] font-mono tracking-widest text-blue-400 uppercase">სუპერ სარეკლამო იდეა</span>
+                      <p className="text-sm text-gray-300 leading-relaxed">{aiStrategyResult.heroIdea}</p>
+                    </div>
+                  </div>
+                  <div className="bg-black/40 border border-white/5 p-6 rounded-xl space-y-4">
+                    <span className="text-[10px] font-mono tracking-widest text-green-400 uppercase block">3 ნაბიჯი წარმატებისთვის:</span>
+                    <ol className="space-y-3">
+                      {aiStrategyResult.strategySteps.map((step, idx) => (
+                        <li key={idx} className="flex items-start space-x-3 text-sm text-gray-300">
+                          <span className="font-bold text-[#E50914] font-mono bg-red-950/40 w-6 h-6 rounded-full flex items-center justify-center border border-[#E50914]/20 flex-shrink-0 text-xs mt-0.5">{idx + 1}</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                  <div className="text-center pt-4">
+                    <p className="text-xs text-gray-500 mb-3">მოგეწონათ ხელოვნური ინტელექტის შემოთავაზება? განვავითაროთ ის ერთად!</p>
+                    <a href="#contact" className="inline-flex items-center space-x-2 text-xs font-bold text-[#E50914] hover:underline">
+                      <span>ესაუბრეთ ეშელონის დიზაინერებს ამ იდეაზე</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING SECTION */}
+      <section id="pricing" className="py-24 bg-[#0d0d0d] relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
+            <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">ფასები და პაკეტები</h2>
+            <p className="text-3xl sm:text-4xl font-black text-white">აირჩიეთ თქვენი ეშელონის პაკეტი</p>
+            <p className="text-gray-400 text-sm sm:text-base">ყველა ფასი გამჭვირვალეა. აირჩიეთ ბრენდინგის სრული არქიტექტურა ან ყოველთვიური სოციალური მედიის (SMM) მხარდაჭერა.</p>
+            <div className="flex justify-center pt-4">
+              <div className="inline-flex bg-[#121212] p-1 rounded-xl border border-white/5">
+                <button
+                  onClick={() => setActiveTab('branding')}
+                  className={`px-6 py-2.5 rounded-lg text-sm font-bold transition ${activeTab === 'branding' ? 'bg-[#E50914] text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  ბრენდინგი & იდენტობა
+                </button>
+                <button
+                  onClick={() => setActiveTab('smm')}
+                  className={`px-6 py-2.5 rounded-lg text-sm font-bold transition ${activeTab === 'smm' ? 'bg-[#E50914] text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  სოციალური მედია (SMM)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            {(activeTab === 'branding' ? brandingPackages : smmPackages).map((pkg, idx) => (
+              <div
+                key={idx}
+                className={`bg-[#121212] border rounded-2xl p-8 flex flex-col justify-between transition duration-300 relative ${pkg.featured ? 'border-[#E50914] shadow-lg shadow-[#E50914]/5 ring-1 ring-[#E50914]' : 'border-white/5'}`}
+              >
+                {pkg.featured && (
+                  <div className="absolute top-0 right-8 -translate-y-1/2 px-3 py-1 bg-[#E50914] text-white text-[10px] font-bold tracking-wider rounded-full uppercase">
+                    {activeTab === 'branding' ? 'ყველაზე პოპულარული' : 'რეკომენდებული'}
+                  </div>
+                )}
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 block mb-1">{pkg.badge}</span>
+                    <h4 className="text-xl font-bold text-white">{pkg.title}</h4>
+                  </div>
+                  <div className="flex items-baseline text-white">
+                    <span className="text-4xl font-black tracking-tight">{pkg.price}</span>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed">{pkg.desc}</p>
+                  <div className="border-t border-white/5 pt-6 space-y-4">
+                    {pkg.features.map((feat, fIdx) => (
+                      <div key={fIdx} className="flex items-start space-x-3 text-xs">
+                        {feat.included ? (
+                          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                        ) : (
+                          <Lock className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+                        )}
+                        <span className={feat.included ? "text-gray-300" : "text-gray-600 line-through"}>{feat.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="pt-8">
+                  <button
+                    onClick={() => setOrderModal(pkg)}
+                    className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs transition duration-200 ${pkg.featured ? 'bg-[#E50914] text-white hover:bg-red-700' : 'bg-[#1a1a1a] text-white hover:bg-white/5 border border-white/10'}`}
+                  >
+                    არჩევა და შეკვეთა
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Custom Price Estimator */}
+          <div className="mt-20 bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-10 max-w-4xl mx-auto">
+            <div className="flex items-center space-x-3 mb-6">
+              <Sliders className="w-6 h-6 text-[#E50914]" />
+              <h3 className="text-xl font-black text-white">ინდივიდუალური პაკეტის ამწყობი</h3>
+            </div>
+            <p className="text-xs text-gray-400 mb-8 leading-relaxed">გჭირდებათ სპეციფიკური მოთხოვნები? ააწყვეთ თქვენი პაკეტი და ნახეთ სავარაუდო ფასი.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                {[
+                  { label: "ლოგოს დიზაინი (+500 ₾)", key: "logo" },
+                  { label: "ბრენდბუქი & გრიდები (+1200 ₾)", key: "guidelines" },
+                  { label: "რეკლამის მართვა (Ad set) (+400 ₾)", key: "advertising" },
+                  { label: "შადოუ რეკლამების ტესტირება (+250 ₾)", key: "shadowTesting" },
+                ].map(({ label, key }) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-gray-300 uppercase">{label}</label>
+                    <input
+                      type="checkbox"
+                      checked={customServices[key]}
+                      onChange={(e) => setCustomServices({ ...customServices, [key]: e.target.checked })}
+                      className="w-5 h-5 rounded border-white/10 text-[#E50914] focus:ring-[#E50914] bg-black"
+                    />
+                  </div>
+                ))}
+                {[
+                  { label: "პოსტების რაოდენობა", key: "posts", price: 90, min: 4, max: 30 },
+                  { label: "სთორების რაოდენობა", key: "stories", price: 25, min: 0, max: 30 },
+                ].map(({ label, key, price, min, max }) => (
+                  <div key={key} className="space-y-2">
+                    <div className="flex justify-between">
+                      <label className="text-xs font-bold text-gray-300 uppercase">{label}: {customServices[key]}</label>
+                      <span className="text-xs font-mono text-[#E50914]">({customServices[key] * price} ₾)</span>
+                    </div>
+                    <input
+                      type="range" min={min} max={max} value={customServices[key]}
+                      onChange={(e) => setCustomServices({ ...customServices, [key]: parseInt(e.target.value, 10) })}
+                      className="w-full accent-[#E50914]"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="bg-black/40 border border-white/5 rounded-xl p-6 flex flex-col justify-between text-center md:text-left">
+                <div className="space-y-4">
+                  <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase block">კალკულაციის ჯამი:</span>
+                  <div className="text-4xl sm:text-5xl font-black text-white">{calculateCustomPrice()} ₾</div>
+                  <p className="text-xs text-gray-400 leading-relaxed">ეს არის ინდივიდუალური გაანგარიშება. საბოლოო პაკეტი დაზუსტდება თქვენთან დეტალური საუბრის შემდეგ.</p>
+                </div>
+                <div className="pt-6">
+                  <button
+                    onClick={() => setOrderModal({ title: 'ინდივიდუალური პაკეტი', price: `${calculateCustomPrice()} ₾`, desc: 'თქვენს მიერ აწყობილი კალკულაცია' })}
+                    className="w-full py-4 bg-white text-black font-bold rounded-xl text-xs hover:bg-gray-100 transition active:scale-95"
+                  >
+                    არჩეული პაკეტის შეკვეთა
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT SECTION */}
+      <section id="contact" className="py-24 bg-[#0a0a0a] border-t border-[#1e1e1e] relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-5 space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-xs font-bold text-[#E50914] tracking-widest uppercase">კონტაქტი</h2>
+                <p className="text-3xl sm:text-4xl font-black text-white">დავიწყოთ თქვენი ბრენდის აღმავლობა</p>
+                <p className="text-gray-400 text-sm leading-relaxed">დაგვიკავშირდით დღესვე და მიიღეთ უფასო კონსულტაცია ეშელონის წამყვან სპეციალისტებთან. ჩვენ ერთად განვსაზღვრავთ თქვენი ბრენდის წარმატების ფორმულას.</p>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { Icon: MapPin, label: "ოფისი:", value: "თბილისი, საქართველო" },
+                  { Icon: Mail, label: "ელ-ფოსტა:", value: "info@eshelon.ge" },
+                  { Icon: Phone, label: "ტელეფონი:", value: "+995 555 XX XX XX" },
+                ].map(({ Icon, label, value }) => (
+                  <div key={label} className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-lg bg-[#121212] border border-white/5 flex items-center justify-center text-[#E50914]">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 font-mono uppercase">{label}</div>
+                      <div className="text-sm font-bold text-white">{value}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="pt-6 border-t border-white/5">
+                <p className="text-xs text-gray-500 leading-relaxed">ჩვენ ვპასუხობთ ყველა შეტყობინებას 24 საათის განმავლობაში.</p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7">
+              <div className="bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-10">
+                <h3 className="text-xl font-bold text-white mb-6">მოგვწერეთ პირდაპირ</h3>
+                <form onSubmit={(e) => { e.preventDefault(); setOrderSuccess(true); setTimeout(() => setOrderSuccess(false), 3000); }} className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">თქვენი სახელი:</label>
+                      <input type="text" className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition" placeholder="მაგ: გიორგი" required />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">ტელეფონის ნომერი:</label>
+                      <input type="tel" className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition" placeholder="მაგ: +995 5..." required />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">ბრენდის ან კომპანიის დასახელება:</label>
+                    <input type="text" className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition" placeholder="მაგ: ეშელონ კაფე" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">შეტყობინება / მოთხოვნები:</label>
+                    <textarea className="w-full bg-black/60 border border-white/10 rounded-lg p-3.5 text-white text-sm focus:outline-none focus:border-[#E50914] transition h-32 resize-none" placeholder="დაწერეთ თქვენი სურვილები..." required />
+                  </div>
+                  <div className="flex justify-end">
+                    <button type="submit" className="w-full sm:w-auto px-8 py-4 bg-[#E50914] text-white font-bold rounded-xl text-xs hover:bg-red-700 transition duration-200 active:scale-95">გაგზავნა</button>
+                  </div>
+                </form>
+                {orderSuccess && (
+                  <div className="mt-6 bg-green-950/40 border border-green-500/30 p-4 rounded-xl text-xs text-green-400">
+                    შეტყობინება წარმატებით გაიგზავნა! ეშელონის სტრატეგები მალე დაგიკავშირდებიან.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-black border-t border-[#1a1a1a] py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-lg overflow-hidden border border-[#E50914]/30">
+                <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Eshelon Logo" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <span className="text-md font-bold tracking-widest text-white block">ESHELON</span>
+                <span className="text-[9px] tracking-widest text-gray-500 block uppercase -mt-1">Highest</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 font-mono">© {new Date().getFullYear()} ESHELON DIGITAL AGENCY. ყველა უფლება დაცულია.</p>
+            <div className="flex items-center space-x-4">
+              <a href="#" className="text-gray-500 hover:text-white transition text-xs">Facebook</a>
+              <span className="text-gray-800">•</span>
+              <a href="#" className="text-gray-500 hover:text-white transition text-xs">Instagram</a>
+              <span className="text-gray-800">•</span>
+              <a href="#" className="text-gray-500 hover:text-white transition text-xs">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* ORDER MODAL */}
+      {orderModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#121212] border border-white/10 rounded-2xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
+            <button onClick={() => setOrderModal(null)} className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/40 p-1.5 rounded-full border border-white/5 transition">
+              <X className="w-5 h-5" />
+            </button>
+            <div className="space-y-4 mb-6">
+              <span className="text-[10px] font-mono tracking-widest text-[#E50914] uppercase">პაკეტის შეკვეთა</span>
+              <h3 className="text-2xl font-black text-white">{orderModal.title}</h3>
+              <div className="text-lg font-bold text-[#E50914]">{orderModal.price}</div>
+              <p className="text-xs text-gray-400">{orderModal.desc}</p>
+            </div>
+            <form onSubmit={handleOrderSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">თქვენი სახელი:</label>
+                <input type="text" value={orderForm.name} onChange={(e) => setOrderForm({ ...orderForm, name: e.target.value })} className="w-full bg-black/60 border border-white/10 rounded-lg p-3 text-white text-xs focus:outline-none focus:border-[#E50914] transition" placeholder="მაგ: გიორგი" required />
+              </div>
+              <div>
+                <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">ტელეფონის ნომერი:</label>
+                <input type="tel" value={orderForm.phone} onChange={(e) => setOrderForm({ ...orderForm, phone: e.target.value })} className="w-full bg-black/60 border border-white/10 rounded-lg p-3 text-white text-xs focus:outline-none focus:border-[#E50914] transition" placeholder="მაგ: +995..." required />
+              </div>
+              <div>
+                <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">კომენტარი ან შენიშვნა:</label>
+                <textarea value={orderForm.note} onChange={(e) => setOrderForm({ ...orderForm, note: e.target.value })} className="w-full bg-black/60 border border-white/10 rounded-lg p-3 text-white text-xs focus:outline-none focus:border-[#E50914] transition h-20 resize-none" placeholder="დამატებითი მოთხოვნები..." />
+              </div>
+              <button type="submit" className="w-full py-4 bg-[#E50914] text-white font-bold rounded-xl text-xs hover:bg-red-700 transition">
+                დადასტურება და შეკვეთა
+              </button>
+            </form>
+            {orderSuccess && (
+              <div className="absolute inset-0 bg-[#121212] rounded-2xl flex flex-col items-center justify-center p-6 text-center z-10">
+                <CheckCircle className="w-12 h-12 text-green-500 mb-4 animate-bounce" />
+                <h4 className="text-lg font-bold text-white mb-2">შეკვეთა მიღებულია!</h4>
+                <p className="text-xs text-gray-400">ჩვენი წარმომადგენელი ძალიან მალე დაგიკავშირდებათ მითითებულ ნომერზე.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
