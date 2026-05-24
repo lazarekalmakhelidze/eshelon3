@@ -472,59 +472,26 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               </div>
             </div>
 
-            {/* Right graphic showcasing the Chibi & Knight aesthetic */}
+            {/* Right graphic — cover image, responsive */}
             <div className="lg:col-span-5 relative flex justify-center">
-              <div className="relative w-full max-w-sm sm:max-w-md aspect-square bg-gradient-to-tr from-red-600/20 via-[#E50914]/10 to-transparent rounded-3xl p-8 border border-white/5 flex items-center justify-center">
-                {/* Decorative glow elements */}
-                <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-red-600 blur-xl opacity-40 animate-pulse" />
-                <div className="absolute bottom-4 left-4 w-16 h-16 rounded-full bg-orange-600 blur-xl opacity-40 animate-pulse" />
+              <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60">
+                {/* Glow accents */}
+                <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-red-600 blur-3xl opacity-30 pointer-events-none" />
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-full bg-orange-600 blur-3xl opacity-20 pointer-events-none" />
 
-                <div className="w-full h-full bg-[#121212]/80 border border-white/10 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden group">
-                  <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                    <span className="text-xs font-mono text-[#E50914] tracking-widest">SYSTEM STATUS: ACTIVE</span>
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping" />
-                  </div>
+                {/* Mobile/portrait: portrait image */}
+                <img
+                  src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
+                  alt="Eshelon Character"
+                  className="block lg:hidden w-full h-auto object-cover object-top"
+                />
 
-                  {/* Creative representation of double-chibi character (Logo concepts) */}
-                  <div className="my-6 space-y-4">
-                    <div className="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-lg bg-red-950 flex items-center justify-center border border-red-500/30">
-                          {/* Chess knight stylized icon */}
-                          <svg className="w-6 h-6 text-[#E50914]" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 12c0 .55-.45 1-1 1H8v-2h4V8H8V6h6c1.1 0 2 .9 2 2v7z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold text-white">ᲡᲢᲠᲐᲢᲔᲒᲘᲣᲚᲘ ᲛᲮᲔᲓᲐᲠᲘ</div>
-                          <div className="text-xs text-gray-500">ანალიტიკა და ჭადრაკის გათვლა</div>
-                        </div>
-                      </div>
-                      <Check className="w-5 h-5 text-green-500" />
-                    </div>
-
-                    <div className="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-lg bg-orange-950 flex items-center justify-center border border-orange-500/30">
-                          {/* Creative pencil style */}
-                          <svg className="w-6 h-6 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold text-white">ᲙᲠᲔᲐᲢᲘᲣᲚᲘ ᲤᲐᲜᲥᲐᲠᲘ</div>
-                          <div className="text-xs text-gray-500">უნიკალური ანიმე/ჩიბი დიზაინი</div>
-                        </div>
-                      </div>
-                      <Check className="w-5 h-5 text-green-500" />
-                    </div>
-                  </div>
-
-                  <div className="bg-[#E50914]/10 border border-[#E50914]/20 p-4 rounded-xl text-center">
-                    <span className="text-xs text-gray-300 font-medium block">მიმდინარე სტატუსი:</span>
-                    <span className="text-sm font-black text-white uppercase block mt-1 tracking-wider">მზად ვართ ახალი პროექტებისთვის</span>
-                  </div>
-                </div>
+                {/* Desktop/landscape: landscape image, fixed height so character is fully visible */}
+                <img
+                  src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
+                  alt="Eshelon Character"
+                  className="hidden lg:block w-full h-[520px] object-cover object-right-top"
+                />
               </div>
             </div>
 
