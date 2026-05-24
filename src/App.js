@@ -1,6 +1,6 @@
 import './style.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Compass,
   Sparkles,
@@ -679,15 +679,18 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
           onClick={() => setSelectedProject(null)}
           style={{ animation: 'fadeIn 0.2s ease both' }}
         >
-          <style>{`@keyframes fadeIn { from { opacity:0 } to { opacity:1 } } @keyframes slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }`}</style>
+          <style>{`
+            @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+            @keyframes slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
+          `}</style>
+
           <div className="min-h-full flex items-start justify-center p-4 py-12">
             <div
               className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full shadow-2xl relative"
               onClick={(e) => e.stopPropagation()}
               style={{ animation: 'slideUp 0.3s cubic-bezier(0.22,1,0.36,1) both' }}
             >
-
-              {/* Close button — absolute top-right */}
+              {/* Close button */}
               <button
                 onClick={() => setSelectedProject(null)}
                 className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white bg-black/70 p-2 rounded-full border border-white/10 transition"
@@ -695,71 +698,60 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                 <X className="w-5 h-5" />
               </button>
 
-            {/* Cover image — full width, no crop */}
-            {selectedProject.coverImage && (
-              <div className="w-full rounded-t-2xl overflow-hidden">
-                <img
-                  src={selectedProject.coverImage}
-                  alt={selectedProject.title}
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-            )}
+              {/* Cover image — full width */}
+              {selectedProject.coverImage && (
+                <div className="w-full rounded-t-2xl overflow-hidden">
+                  <img
+                    src={selectedProject.coverImage}
+                    alt={selectedProject.title}
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
+              )}
 
-            {/* Content */}
-            <div className="p-8 space-y-6">
+              {/* Content */}
+              <div className="p-8 space-y-6">
+                <div className="space-y-1">
+                  <span className="text-xs font-mono tracking-widest text-[#E50914] uppercase">{selectedProject.category}</span>
+                  <h3 className="text-3xl font-black text-white">{selectedProject.title}</h3>
+                </div>
 
-              {/* Title block */}
-              <div className="space-y-1">
-                <span className="text-xs font-mono tracking-widest text-[#E50914] uppercase">{selectedProject.category}</span>
-                <h3 className="text-3xl font-black text-white">{selectedProject.title}</h3>
-              </div>
+                <p className="text-gray-300 leading-relaxed text-sm">{selectedProject.longDescription}</p>
 
-              {/* Description */}
-              <p className="text-gray-300 leading-relaxed text-sm">
-                {selectedProject.longDescription}
-              </p>
+                <div className="space-y-3">
+                  <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">მთავარი ელემენტები:</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedProject.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-center space-x-2 bg-black/40 p-3 rounded-lg border border-white/5 text-xs text-gray-300">
+                        <CheckCircle className="w-4 h-4 shrink-0 text-[#E50914]" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-              {/* Features */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">მთავარი ელემენტები:</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {selectedProject.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center space-x-2 bg-black/40 p-3 rounded-lg border border-white/5 text-xs text-gray-300">
-                      <CheckCircle className="w-4 h-4 shrink-0 text-[#E50914]" />
-                      <span>{feat}</span>
-                    </div>
-                  ))}
+                <div className="space-y-2">
+                  <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">ტეგები:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tags.map((tag, idx) => (
+                      <span key={idx} className="text-xs font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-[#333] uppercase tracking-wider">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Tags */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">ტეგები:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.tags.map((tag, idx) => (
-                    <span key={idx} className="text-xs font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-[#333] uppercase tracking-wider">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              {/* Footer */}
+              <div className="px-8 pb-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <span className="text-xs text-gray-400">გსურთ მსგავსი შედეგი თქვენს ბრენდზე?</span>
+                <button
+                  onClick={() => { setOrderModal(selectedProject); setSelectedProject(null); }}
+                  className="w-full sm:w-auto px-6 py-3 bg-[#E50914] text-white font-bold rounded-lg text-xs hover:bg-red-700 transition"
+                >
+                  მსგავსი პროექტის შეკვეთა
+                </button>
               </div>
-            </div>
-
-            {/* Footer */}
-            <div className="px-8 pb-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-              <span className="text-xs text-gray-400">გსურთ მსგავსი შედეგი თქვენს ბრენდზე?</span>
-              <button
-                onClick={() => {
-                  setOrderModal(selectedProject);
-                  setSelectedProject(null);
-                }}
-                className="w-full sm:w-auto px-6 py-3 bg-[#E50914] text-white font-bold rounded-lg text-xs hover:bg-red-700 transition"
-              >
-                დაბრუნება
-              </button>
-            </div>
-
             </div>
           </div>
         </div>
