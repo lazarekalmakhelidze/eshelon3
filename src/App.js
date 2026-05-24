@@ -658,60 +658,78 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
         </div>
       </section>
 
-      {/* PORTFOLIO MODAL (Popup with details) */}
+      {/* PORTFOLIO MODAL */}
       {selectedProject && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+        <div
+          className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="bg-[#121212] border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
 
+            {/* Close button — sticky */}
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/40 p-2 rounded-full border border-white/5 transition"
+              className="sticky top-4 float-right mr-4 z-10 text-gray-400 hover:text-white bg-black/70 p-2 rounded-full border border-white/10 transition"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {/* Modal Header */}
-            <div className="p-8 pb-4 border-b border-white/5 space-y-3">
-              <span className="text-xs font-mono tracking-widest text-[#E50914] uppercase">პორტფოლიოს დეტალები</span>
-              <h3 className="text-3xl font-black text-white">{selectedProject.title}</h3>
-              <p className="text-sm text-[#E50914] font-bold">{selectedProject.category}</p>
-            </div>
+            {/* Cover image — full width, no crop */}
+            {selectedProject.coverImage && (
+              <div className="w-full rounded-t-2xl overflow-hidden">
+                <img
+                  src={selectedProject.coverImage}
+                  alt={selectedProject.title}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+            )}
 
-            {/* Modal Body */}
+            {/* Content */}
             <div className="p-8 space-y-6">
-              <div className="space-y-2">
-                <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">პროექტის შესახებ:</h4>
-                <p className="text-gray-300 leading-relaxed text-sm">
-                  {selectedProject.longDescription}
-                </p>
+
+              {/* Title block */}
+              <div className="space-y-1">
+                <span className="text-xs font-mono tracking-widest text-[#E50914] uppercase">{selectedProject.category}</span>
+                <h3 className="text-3xl font-black text-white">{selectedProject.title}</h3>
               </div>
 
+              {/* Description */}
+              <p className="text-gray-300 leading-relaxed text-sm">
+                {selectedProject.longDescription}
+              </p>
+
+              {/* Features */}
               <div className="space-y-3">
                 <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">მთავარი ელემენტები:</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {selectedProject.features.map((feat, idx) => (
                     <div key={idx} className="flex items-center space-x-2 bg-black/40 p-3 rounded-lg border border-white/5 text-xs text-gray-300">
-                      <CheckCircle className="w-4 h-4 text-[#E50914]" />
+                      <CheckCircle className="w-4 h-4 shrink-0 text-[#E50914]" />
                       <span>{feat}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
+              {/* Tags */}
               <div className="space-y-2">
                 <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest">ტეგები:</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedProject.tags.map((tag, idx) => (
-                    <span key={idx} className="text-xs font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-[#333]">
-                      #{tag}
+                    <span key={idx} className="text-xs font-mono px-3 py-1 rounded-md bg-[#1a1a1a] text-white border border-[#333] uppercase tracking-wider">
+                      {tag}
                     </span>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="p-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 bg-black/20">
+            {/* Footer */}
+            <div className="px-8 pb-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
               <span className="text-xs text-gray-400">გსურთ მსგავსი შედეგი თქვენს ბრენდზე?</span>
               <button
                 onClick={() => {
@@ -720,7 +738,7 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
                 }}
                 className="w-full sm:w-auto px-6 py-3 bg-[#E50914] text-white font-bold rounded-lg text-xs hover:bg-red-700 transition"
               >
-                მსგავსი პროექტის შეკვეთა
+                დაბრუნება
               </button>
             </div>
 
