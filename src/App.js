@@ -334,17 +334,19 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-3">
-              {/* Custom SVG logo mimicking the chibi/anime aesthetic and chess knight */}
-              <div className="relative group cursor-pointer">
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#E50914] to-orange-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300" />
-                <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-[#E50914]/50">
-                  <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Eshelon Logo" className="w-full h-full object-cover" />
+              {/* Logo — click scrolls to hero */}
+              <a href="#hero" className="flex items-center space-x-3 group">
+                <div className="relative cursor-pointer">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-[#E50914] to-orange-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300" />
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-[#E50914]/50">
+                    <img src="https://i.postimg.cc/KcB5nxGh/logod.jpg" alt="Eshelon Logo" className="w-full h-full object-cover" />
+                  </div>
                 </div>
-              </div>
-              <div>
-                <span className="text-xl font-black tracking-widest text-white block">ESHELON</span>
-                <span className="text-[10px] tracking-widest text-[#E50914] font-bold block -mt-1 uppercase">Highest</span>
-              </div>
+                <div>
+                  <span className="text-xl font-black tracking-widest text-white block">ESHELON</span>
+                  <span className="text-[10px] tracking-widest text-[#E50914] font-bold block -mt-1 uppercase">Highest</span>
+                </div>
+              </a>
             </div>
 
             {/* Desktop Navigation */}
@@ -420,20 +422,38 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
       </nav>
 
       {/* HERO SECTION — full-width cover background */}
-      <section className="relative overflow-hidden min-h-[92vh] flex items-center">
+      <section id="hero" className="relative overflow-hidden min-h-[92vh] flex items-center">
 
-        {/* Background cover — desktop */}
+        {/* Background cover — desktop, fade+scale in */}
         <img
           src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
           alt="Eshelon Cover"
           className="hidden lg:block absolute inset-0 w-full h-full object-cover object-right"
+          style={{ animation: 'coverReveal 1.2s cubic-bezier(0.22,1,0.36,1) both' }}
         />
         {/* Background cover — mobile */}
         <img
           src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
           alt="Eshelon Cover"
           className="block lg:hidden absolute inset-0 w-full h-full object-cover object-right"
+          style={{ animation: 'coverReveal 1.2s cubic-bezier(0.22,1,0.36,1) both' }}
         />
+
+        {/* Keyframes injected inline */}
+        <style>{`
+          @keyframes coverReveal {
+            from { opacity: 0; transform: scale(1.06); }
+            to   { opacity: 1; transform: scale(1); }
+          }
+          @keyframes headlineGlow {
+            0%,100% { filter: drop-shadow(0 0 18px rgba(229,9,20,0.55)) drop-shadow(0 0 40px rgba(229,9,20,0.25)); }
+            50%      { filter: drop-shadow(0 0 32px rgba(255,120,0,0.75)) drop-shadow(0 0 70px rgba(229,9,20,0.45)); }
+          }
+          @keyframes headlineIn {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
 
         {/* Left gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/75 to-transparent" />
@@ -449,10 +469,14 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
               <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
             </div>
 
+            {/* Headline PNG with glow + entrance animation */}
             <img
               src="https://i.postimg.cc/gj0h2dyY/teqsst1.png"
               alt="Headline"
-              className="w-full max-w-lg drop-shadow-2xl"
+              className="w-full max-w-lg"
+              style={{
+                animation: 'headlineIn 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both, headlineGlow 3s 1.2s ease-in-out infinite'
+              }}
             />
 
             <div className="flex flex-col sm:flex-row items-start gap-4">
