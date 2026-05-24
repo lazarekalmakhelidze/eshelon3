@@ -419,79 +419,77 @@ Keep the style bold, youthful, and highly confident (as a top-tier digital agenc
         )}
       </nav>
 
-      {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-24 md:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      {/* HERO SECTION — full-width cover background */}
+      <section className="relative overflow-hidden min-h-[92vh] flex items-center">
 
-            {/* Left intro copy */}
-            <div className="lg:col-span-7 space-y-8 text-center lg:text-left">
-              <div className="inline-flex items-center space-x-2 bg-red-950/50 border border-[#E50914]/30 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914]">
-                <Sparkles className="w-4 h-4 text-red-500 animate-spin-slow" />
-                <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
-              </div>
+        {/* Background cover — desktop */}
+        <img
+          src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
+          alt="Eshelon Cover"
+          className="hidden lg:block absolute inset-0 w-full h-full object-cover object-right"
+        />
+        {/* Background cover — mobile */}
+        <img
+          src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
+          alt="Eshelon Cover"
+          className="block lg:hidden absolute inset-0 w-full h-full object-cover object-right"
+        />
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white">
-                ᲩᲕᲔᲜ ᲕᲥᲛᲜᲘᲗ <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E50914] to-orange-500">ᲘᲛᲞᲔᲠᲘᲔᲑᲡ</span>, ᲐᲠᲐ ᲛᲮᲝᲚᲝᲓ ᲑᲠᲔᲜᲓᲔᲑᲡ.
-              </h1>
+        {/* Left gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/75 to-transparent" />
+        {/* Bottom fade into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
 
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto lg:mx-0">
-                ციფრული სააგენტო <strong>ეშელონი</strong> აერთიანებს უმაღლესი დონის მარკეტინგულ სტრატეგიას (ჭადრაკის მხედარი) და თამამ, აგრესიულ ვიზუალურ ხელოვნებას (კრეატიული ფანქარი). ჩვენი მისიაა თქვენი იდეების ბრენდირებულ ერთეულად ქცევა.
-              </p>
+        {/* Content */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="max-w-xl lg:max-w-2xl space-y-8">
 
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                <a
-                  href="#portfolio"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-gray-100 transition duration-200 shadow-lg shadow-white/5 active:scale-95"
-                >
-                  ᲜᲐᲮᲔ ᲞᲝᲠᲢᲤᲝᲚᲘᲝ
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </a>
-                <a
-                  href="#pricing"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-transparent text-white border border-[#3a3a3a] hover:border-white hover:bg-white/5 transition duration-200 active:scale-95"
-                >
-                  ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲢᲔᲑᲘ
-                </a>
-              </div>
-
-              {/* Minimalist key metrics */}
-              <div className="pt-8 grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0 border-t border-[#1e1e1e]">
-                <div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">98%</div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wider">კმაყოფილი კლიენტი</div>
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wider">შექმნილი იდენტობა</div>
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">2.5X</div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wider">ROI გაყიდვებში</div>
-                </div>
-              </div>
+            <div className="inline-flex items-center space-x-2 bg-red-950/60 border border-[#E50914]/40 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#E50914]">
+              <Sparkles className="w-4 h-4 text-red-500 animate-spin-slow" />
+              <span>ეშელონი • ბრენდირებული ერთეულების არჩევანი</span>
             </div>
 
-            {/* Right graphic — cover image, responsive */}
-            <div className="lg:col-span-5 relative flex justify-center">
-              <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60">
-                {/* Glow accents */}
-                <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-red-600 blur-3xl opacity-30 pointer-events-none" />
-                <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-full bg-orange-600 blur-3xl opacity-20 pointer-events-none" />
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white drop-shadow-lg">
+              ᲩᲕᲔᲜ ᲕᲥᲛᲜᲘᲗ{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E50914] to-orange-500">
+                ᲘᲛᲞᲔᲠᲘᲔᲑᲡ
+              </span>
+              , ᲐᲠᲐ ᲛᲮᲝᲚᲝᲓ ᲑᲠᲔᲜᲓᲔᲑᲡ.
+            </h1>
 
-                {/* Mobile/portrait: portrait image */}
-                <img
-                  src="https://i.postimg.cc/7ZW3RCkT/cover-portrait.jpg"
-                  alt="Eshelon Character"
-                  className="block lg:hidden w-full h-auto object-cover object-top"
-                />
+            <p className="text-gray-300 text-lg max-w-lg">
+              ციფრული სააგენტო <strong className="text-white">ეშელონი</strong> აერთიანებს უმაღლესი დონის მარკეტინგულ სტრატეგიას და თამამ, აგრესიულ ვიზუალურ ხელოვნებას. ჩვენი მისიაა თქვენი იდეების ბრენდირებულ ერთეულად ქცევა.
+            </p>
 
-                {/* Desktop/landscape: landscape image, fixed height so character is fully visible */}
-                <img
-                  src="https://i.postimg.cc/y6mTNYF0/cover-landscape.jpg"
-                  alt="Eshelon Character"
-                  className="hidden lg:block w-full h-[520px] object-cover object-right-top"
-                />
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              <a
+                href="#portfolio"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-gray-100 transition duration-200 shadow-lg active:scale-95"
+              >
+                ᲜᲐᲮᲔ ᲞᲝᲠᲢᲤᲝᲚᲘᲝ
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </a>
+              <a
+                href="#pricing"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-base font-bold bg-transparent text-white border border-white/30 hover:border-white hover:bg-white/10 transition duration-200 active:scale-95"
+              >
+                ᲤᲐᲡᲔᲑᲘᲡ ᲞᲐᲙᲔᲢᲔᲑᲘ
+              </a>
+            </div>
+
+            {/* Key metrics */}
+            <div className="pt-8 grid grid-cols-3 gap-6 max-w-md border-t border-white/10">
+              <div>
+                <div className="text-2xl sm:text-3xl font-black text-white">98%</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">კმაყოფილი კლიენტი</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">შექმნილი იდენტობა</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-black text-white">2.5X</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">ROI გაყიდვებში</div>
               </div>
             </div>
 
